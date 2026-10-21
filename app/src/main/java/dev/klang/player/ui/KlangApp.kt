@@ -223,10 +223,7 @@ fun KlangApp(
         AlertDialog(
             onDismissRequest = { menuTrack = null },
             title = { Text(track.title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
-            text = { Text(track.artist + "
-" + track.album + "
-" + track.durationLabel + "
-" + track.folder) },
+            text = { Text(track.artist + "\n" + track.album + "\n" + track.durationLabel + "\n" + track.folder) },
             confirmButton = {
                 TextButton(onClick = { editingTrack = track; menuTrack = null }) { Text("Edit details") }
             },
