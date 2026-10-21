@@ -179,8 +179,12 @@ jobs:
           done
           flutter pub get
 
-      - name: Generate launcher icons
-        run: dart run flutter_launcher_icons
+      - name: Keep Looper's built-in launcher icon
+        run: |
+          # The upstream Android mipmap resources are WebP. Regenerating PNGs here
+          # creates duplicate Android resource names, so preserve the upstream icon.
+          test -f android/app/src/main/res/mipmap-hdpi/ic_launcher.webp
+          test -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
 
       - name: Analyze Dart source
         run: flutter analyze --no-pub
@@ -188,6 +192,38 @@ jobs:
 
       - name: Build Android APK
         run: flutter build apk --flavor github --debug
+
+      - name: Verify APK minimum SDK and device ABIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=build/app/outputs/flutter-apk/app-github-debug.apk
+          test -f "$apk"
+          actual_min_sdk="$(apkanalyzer manifest min-sdk "$apk")"
+          echo "APK minSdk: $actual_min_sdk"
+          test "$actual_min_sdk" = "27"
+          echo "APK native libraries:"
+          unzip -Z1 "$apk" | grep -E '^lib/(arm64-v8a|armeabi-v7a|x86_64)/.*\\.so        uses: actions/upload-artifact@v4
+        with:
+          name: Klang-Retro-debug-apk
+          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+ | sed -n '1,80p'
+          unzip -Z1 "$apk" | grep -q '^lib/arm64-v8a/libmpv\\.so        uses: actions/upload-artifact@v4
+        with:
+          name: Klang-Retro-debug-apk
+          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+          unzip -Z1 "$apk" | grep -q '^lib/arm64-v8a/libc\\+\\+_shared\\.so        uses: actions/upload-artifact@v4
+        with:
+          name: Klang-Retro-debug-apk
+          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
