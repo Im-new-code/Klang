@@ -36,8 +36,6 @@ jobs:
             rm -f .github/workflows/release.yml
             if [ -f /tmp/retro-cassette-placeholder.png ]; then
               cp /tmp/retro-cassette-placeholder.png assets/branding/retro-cassette-placeholder.png
-              cp /tmp/retro-cassette-placeholder.png assets/branding/launcher_icon.png
-              cp /tmp/retro-cassette-placeholder.png assets/branding/launcher_icon_adaptive.png
             fi
 
             python3 - <<'PY'
