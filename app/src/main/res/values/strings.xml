@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Klang</string>
+    <string name="portal_subtitle">Your music, another world.</string>
+    <string name="media_permission_rationale">Klang needs permission to discover audio files stored on your device. Your music stays on your device.</string>
+</resources>
