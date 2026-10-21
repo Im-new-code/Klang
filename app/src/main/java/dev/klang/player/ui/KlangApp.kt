@@ -16,14 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -212,8 +207,8 @@ private fun MiniPlayer(track: Track, playing: Boolean, onOpen: () -> Unit, onTog
                 Text(track.title, maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Medium)
                 Text(track.artist, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            IconButton(onClick = onToggle) { Icon(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, if (playing) "Pause" else "Play") }
-            IconButton(onClick = onNext) { Icon(Icons.Default.SkipNext, "Next") }
+            TextButton(onClick = onToggle) { Text(if (playing) "Ⅱ" else "▶", style = MaterialTheme.typography.titleLarge) }
+            TextButton(onClick = onNext) { Text("⏭", style = MaterialTheme.typography.titleLarge) }
         }
     }
 }
@@ -333,13 +328,13 @@ private fun FullPlayer(
                     Text("0:00", style = MaterialTheme.typography.labelSmall); Text(track.durationLabel, style = MaterialTheme.typography.labelSmall)
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = onShuffle) { Icon(Icons.Default.Shuffle, "Shuffle") }
-                    IconButton(onClick = onPrevious) { Icon(Icons.Default.SkipPrevious, "Previous") }
+                    TextButton(onClick = onShuffle) { Text("⇄") }
+                    TextButton(onClick = onPrevious) { Text("⏮", style = MaterialTheme.typography.titleLarge) }
                     FilledIconButton(onClick = onToggle, modifier = Modifier.size(60.dp)) {
-                        Icon(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, "Play or pause", Modifier.size(32.dp))
+                        Text(if (playing) "Ⅱ" else "▶", style = MaterialTheme.typography.headlineMedium)
                     }
-                    IconButton(onClick = onNext) { Icon(Icons.Default.SkipNext, "Next") }
-                    IconButton(onClick = onRepeat) { Icon(Icons.Default.Repeat, "Repeat") }
+                    TextButton(onClick = onNext) { Text("⏭", style = MaterialTheme.typography.titleLarge) }
+                    TextButton(onClick = onRepeat) { Text("↻") }
                 }
                 TextButton(onClick = onFavorite) {
                     Icon(if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, null)
