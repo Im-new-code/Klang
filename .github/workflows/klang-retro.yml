@@ -169,11 +169,15 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Resolve Flutter packages
-        run: flutter pub get
+        run: |
+          dart pub get
+          find "${PUB_CACHE:-$HOME/.pub-cache}/hosted" \
+            -path '*/appambit_sdk_flutter-*/android/src/main/kotlin/*/AppambitSdkFlutterPlugin.kt' |
+          while read -r f; do
+            mv -v "$f" "$(dirname "$f")/AppAmbitSdkFlutterPlugin.kt"
+          done
+          flutter pub get
 
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
