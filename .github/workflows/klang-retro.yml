@@ -30,9 +30,10 @@ jobs:
               cp assets/branding/retro-cassette-placeholder.png /tmp/retro-cassette-placeholder.png
             fi
             git clone --depth 1 https://github.com/SthrNilshaaa/looper.git /tmp/looper
-            rsync -a --delete --exclude='.git/' --exclude='.github/workflows/klang-retro.yml' /tmp/looper/ ./
+            rsync -a --delete --exclude='.git/' --exclude='.github/workflows/klang-retro.yml' --exclude='.github/workflows/android.yml' /tmp/looper/ ./
             mkdir -p .github/workflows assets/branding
             cp /tmp/klang-retro.yml .github/workflows/klang-retro.yml
+            rm -f .github/workflows/release.yml
             if [ -f /tmp/retro-cassette-placeholder.png ]; then
               cp /tmp/retro-cassette-placeholder.png assets/branding/retro-cassette-placeholder.png
               cp /tmp/retro-cassette-placeholder.png assets/branding/launcher_icon.png
