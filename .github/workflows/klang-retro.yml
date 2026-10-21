@@ -1,0 +1,193 @@
+name: Klang Retro Android
+
+on:
+  push:
+    branches:
+      - player/looper-based-rebuild
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Klang Retro branch
+        uses: actions/checkout@v4
+        with:
+          ref: player/looper-based-rebuild
+          fetch-depth: 0
+
+      - name: Materialize Looper source and apply Klang Retro skin
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f pubspec.yaml ]; then
+            cp .github/workflows/klang-retro.yml /tmp/klang-retro.yml
+            if [ -f assets/branding/retro-cassette-placeholder.png ]; then
+              cp assets/branding/retro-cassette-placeholder.png /tmp/retro-cassette-placeholder.png
+            fi
+            git clone --depth 1 https://github.com/SthrNilshaaa/looper.git /tmp/looper
+            rsync -a --delete --exclude='.git/' --exclude='.github/workflows/klang-retro.yml' /tmp/looper/ ./
+            mkdir -p .github/workflows assets/branding
+            cp /tmp/klang-retro.yml .github/workflows/klang-retro.yml
+            if [ -f /tmp/retro-cassette-placeholder.png ]; then
+              cp /tmp/retro-cassette-placeholder.png assets/branding/retro-cassette-placeholder.png
+              cp /tmp/retro-cassette-placeholder.png assets/branding/launcher_icon.png
+              cp /tmp/retro-cassette-placeholder.png assets/branding/launcher_icon_adaptive.png
+            fi
+
+            python3 - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new, count=1):
+              p = Path(path)
+              s = p.read_text()
+              if old not in s:
+                  raise SystemExit(f"Expected text not found in {path}: {old[:100]!r}")
+              p.write_text(s.replace(old, new, count))
+
+          replace("pubspec.yaml",
+                  'description: "Looper Player - A powerful music player."',
+                  'description: "Klang Retro: Looper-based music player with a pixel-art theme."')
+          replace("pubspec.yaml", 'version: 2.7.4+42', 'version: 0.1.0+1')
+          replace("android/app/build.gradle.kts", 'applicationId = "com.looper.player"', 'applicationId = "dev.klangretro.player"')
+          replace("android/app/build.gradle.kts", "minSdk = 29", "minSdk = 27")
+          replace("android/app/src/main/AndroidManifest.xml", 'android:label="Looper Player"', 'android:label="Klang Retro"')
+          replace("lib/main.dart", "title: 'Looper Player',", "title: 'Klang Retro',", 10)
+          replace("lib/main.dart",
+                  "final String fontFamily = useNewFont\n        ? (customFontFamily.isEmpty ? 'Stack Sans Text' : customFontFamily)\n        : 'Stack Sans Text';",
+                  "final String fontFamily = useNewFont\n        ? (customFontFamily.isEmpty ? 'Pixelify Sans' : customFontFamily)\n        : 'Pixelify Sans';")
+          replace("lib/main.dart", "colorScheme: colorScheme,",
+                  """colorScheme: colorScheme.copyWith(
+                      surface: const Color(0xFF171923),
+                      surfaceContainerLowest: const Color(0xFF11131A),
+                      surfaceContainerLow: const Color(0xFF191B24),
+                      surfaceContainer: const Color(0xFF20232D),
+                      surfaceContainerHigh: const Color(0xFF292C38),
+                      surfaceContainerHighest: const Color(0xFF323543),
+                      onSurface: const Color(0xFFFFE4B5),
+                      onSurfaceVariant: const Color(0xFFD1BFA8),
+                      secondary: const Color(0xFF72B9D0),
+                      outline: const Color(0xFF825A43),
+                      outlineVariant: const Color(0xFF44363A),
+                    ),
+                    cardTheme: CardThemeData(
+                      color: const Color(0xFF20232D),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: const BorderSide(color: Color(0xFF54372F)),
+                      ),
+                    ),
+                    dialogTheme: DialogThemeData(
+                      backgroundColor: const Color(0xFF20232D),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: const BorderSide(color: Color(0xFF54372F)),
+                      ),
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
+                      filled: true,
+                      fillColor: const Color(0xFF191B24),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: Color(0xFF54372F)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: Color(0xFF54372F)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+                      ),
+                    ),
+                    elevatedButtonTheme: ElevatedButtonThemeData(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    outlinedButtonTheme: OutlinedButtonThemeData(
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        side: const BorderSide(color: Color(0xFF825A43)),
+                      ),
+                    ),
+                    bottomSheetTheme: const BottomSheetThemeData(
+                      backgroundColor: Color(0xFF20232D),
+                      surfaceTintColor: Colors.transparent,
+                    ),""")
+          replace("lib/main.dart",
+                  "borderRadius: BorderRadius.circular(12),\n              side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),",
+                  "borderRadius: BorderRadius.circular(4),\n              side: const BorderSide(color: Color(0xFF54372F)),")
+          replace("lib/core/theme/app_fonts.dart", "static String activeFontFamily = 'Stack Sans Text';", "static String activeFontFamily = 'Pixelify Sans';")
+          replace("lib/core/theme/app_fonts.dart", "static const String stackSansText = 'Stack Sans Text';", "static const String stackSansText = 'Pixelify Sans';")
+          replace("lib/core/theme/app_fonts.dart", "    'Stack Sans Text',\n    'DM Sans',", "    'Pixelify Sans',\n    'DM Sans',")
+
+          pubspec = Path("pubspec.yaml")
+          content = pubspec.read_text()
+          if "family: Pixelify Sans" not in content:
+              marker = "  shaders:\n"
+              if marker not in content:
+                  raise SystemExit("Could not find the Flutter shaders section in pubspec.yaml")
+              content = content.replace(marker,
+                  "    - family: Pixelify Sans\n"
+                  "      fonts:\n"
+                  "        - asset: assets/fonts/pixelify_sans.ttf\n"
+                  + marker, 1)
+              pubspec.write_text(content)
+          PY
+
+            mkdir -p assets/fonts
+            curl --fail --location --retry 3 --retry-delay 2 \
+              'https://raw.githubusercontent.com/google/fonts/main/ofl/pixelifysans/PixelifySans%5Bwght%5D.ttf' \
+              --output assets/fonts/pixelify_sans.ttf
+
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "feat: import Looper source with Klang Retro skin"
+            git push origin HEAD:player/looper-based-rebuild
+          else
+            echo "Looper source already materialized; keeping existing source edits."
+          fi
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Resolve Flutter packages
+        run: flutter pub get
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
+
+      - name: Analyze Dart source
+        run: flutter analyze --no-pub
+        continue-on-error: true
+
+      - name: Build Android APK
+        run: flutter build apk --flavor github --debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Klang-Retro-debug-apk
+          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          if-no-files-found: error
+          retention-days: 14
