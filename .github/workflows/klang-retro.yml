@@ -188,7 +188,7 @@ jobs:
 
       - name: Analyze Dart source
         run: flutter analyze --no-pub
-        continue-on-error: true
+        # Fail CI on analyzer findings instead of hiding them.
 
       - name: Build Android APK
         run: flutter build apk --flavor github --debug
