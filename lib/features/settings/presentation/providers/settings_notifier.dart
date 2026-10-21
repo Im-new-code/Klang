@@ -137,9 +137,19 @@ class Settings extends _$Settings {
         needsSave = true;
       }
       if (!settings.stackSansDefaultMigrated) {
+        // Klang Retro's default font is Pixelify Sans. Migrate the old
+        // bundled default (and old Stack Sans selections that were the default
+        // before custom fonts became selectable) without overriding a distinct
+        // font the user deliberately picked.
         final font = settings.customFontFamily;
-        if (font.isEmpty || font == 'Space Grotesk') {
+        if (font.isEmpty ||
+            font == 'Space Grotesk' ||
+            font == 'Stack Sans Text') {
           settings.customFontFamily = AppFonts.stackSansText;
+        }
+        final lyricsFont = settings.customFontFamilyLyrics;
+        if (lyricsFont.isEmpty || lyricsFont == 'Stack Sans Text') {
+          settings.customFontFamilyLyrics = AppFonts.stackSansText;
         }
         settings.stackSansDefaultMigrated = true;
         needsSave = true;
