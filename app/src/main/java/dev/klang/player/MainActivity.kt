@@ -33,13 +33,13 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private val tracks = androidx.compose.runtime.mutableStateListOf<Track>()
+    private val tracks = androidx.compose.runtime.mutableStateOf<List<Track>>(emptyList())
     private val currentTrack = androidx.compose.runtime.mutableStateOf<Track?>(null)
     private val playing = androidx.compose.runtime.mutableStateOf(false)
     private val loading = androidx.compose.runtime.mutableStateOf(false)
     private val message = androidx.compose.runtime.mutableStateOf<String?>(null)
-    private val favorites = androidx.compose.runtime.mutableStateListOf<Long>()
-    private val playlists = androidx.compose.runtime.mutableStateListOf<String>()
+    private val favorites = androidx.compose.runtime.mutableStateOf<Set<Long>>(emptySet())
+    private val playlists = androidx.compose.runtime.mutableStateOf<List<String>>(emptyList())
     private val positionMs = androidx.compose.runtime.mutableLongStateOf(0L)
     private val durationMs = androidx.compose.runtime.mutableLongStateOf(0L)
     private val volume = androidx.compose.runtime.mutableIntStateOf(0)
@@ -81,8 +81,8 @@ class MainActivity : ComponentActivity() {
         repository = MusicRepository(this)
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         val prefs = getSharedPreferences("klang", MODE_PRIVATE)
-        favorites.addAll(prefs.getStringSet("favorites", emptySet()).orEmpty().mapNotNull { it.toLongOrNull() })
-        playlists.addAll(prefs.getStringSet("playlists", emptySet()).orEmpty().sorted())
+        favorites.value = prefs.getStringSet("favorites", emptySet()).orEmpty().mapNotNull { it.toLongOrNull() }.toSet()
+        playlists.value = prefs.getStringSet("playlists", emptySet()).orEmpty().sorted()
         themeMode.value = prefs.getString("theme_mode", "system") ?: "system"
         accentColor.value = prefs.getString("accent_color", "purple") ?: "purple"
         compactRows.value = prefs.getBoolean("compact_rows", false)
@@ -91,10 +91,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             KlangTheme(mode = themeMode.value, accent = accentColor.value) {
                 KlangApp(
-                    tracks = tracks, currentTrack = currentTrack.value, isPlaying = playing.value,
-                    isLoading = loading.value, message = message.value, favoriteIds = favorites.toSet(),
-                    playlists = playlists.toList(), positionMs = positionMs.longValue,
-                    durationMs = durationMs.longValue, volume = volume.intValue,
+                    tracks = tracks.value, currentTrack = currentTrack.value, isPlaying = playing.value,
+                    isLoading = loading.value, message = message.value, favoriteIds = favorites.value,
+                    playlists = playlists.value, positionMs = positionMs,
+                    durationMs = durationMs, volume = volume.intValue,
                     maxVolume = maxVolume.intValue, volumeOverlayVisible = volumeOverlayVisible.value,
                     themeMode = themeMode.value, accentColor = accentColor.value, compactRows = compactRows.value,
                     onPlayTrack = ::playTrack, onTogglePlayback = ::togglePlayback,
@@ -115,14 +115,14 @@ class MainActivity : ComponentActivity() {
             while (isActive) {
                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                     val player = controller
-                    if (player != null) {
+                    // Player listeners update paused state. Only tick the timeline while audio runs.
+                    if (player != null && player.isPlaying) {
                         positionMs.longValue = player.currentPosition.coerceAtLeast(0L)
                         durationMs.longValue = player.duration.takeIf { it != C.TIME_UNSET && it > 0L }
                             ?: currentTrack.value?.durationMs ?: 0L
-                        playing.value = player.isPlaying
                     }
                 }
-                delay(400L)
+                delay(500L)
             }
         }
     }
@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
         if (::repository.isInitialized && hasAudioPermission()) {
             val stale = lastScanCompletedAt == 0L || System.currentTimeMillis() - lastScanCompletedAt > 30_000L
             if (stale) scanLibrary(force = false)
-        } else if (::repository.isInitialized && tracks.isEmpty()) {
+        } else if (::repository.isInitialized && tracks.value.isEmpty()) {
             message.value = "Music permission is required to scan audio on this device."
         }
         if (::audioManager.isInitialized) refreshVolumeState()
@@ -196,7 +196,7 @@ class MainActivity : ComponentActivity() {
             if (isFinishing || isDestroyed) { connected.release(); return@addListener }
             controller = connected
             connected.addListener(playerListener)
-            updateQueue(tracks.toList())
+            updateQueue(tracks.value)
             syncPlayerState()
         }, ContextCompat.getMainExecutor(this))
     }
@@ -230,8 +230,7 @@ class MainActivity : ComponentActivity() {
             loading.value = false
             lastScanCompletedAt = System.currentTimeMillis()
             result.onSuccess { found ->
-                tracks.clear()
-                tracks.addAll(found)
+                tracks.value = found
                 message.value = if (found.isEmpty()) {
                     "No audio files were indexed. Check that the files are stored locally and are audio files, then scan again."
                 } else null
@@ -270,7 +269,7 @@ class MainActivity : ComponentActivity() {
 
     private fun playTrack(track: Track) {
         val player = controller ?: return
-        val source = tracks.toList()
+        val source = tracks.value
         val index = source.indexOfFirst { it.id == track.id }
         if (index < 0) return
         val queueIds = (0 until player.mediaItemCount).mapNotNull { player.getMediaItemAt(it).mediaId.toLongOrNull() }
@@ -288,7 +287,7 @@ class MainActivity : ComponentActivity() {
         val player = controller ?: return
         if (player.isPlaying) player.pause()
         else {
-            if (player.mediaItemCount == 0) updateQueue(tracks.toList())
+            if (player.mediaItemCount == 0) updateQueue(tracks.value)
             if (player.mediaItemCount > 0) player.play()
         }
     }
@@ -297,23 +296,27 @@ class MainActivity : ComponentActivity() {
         val player = controller ?: return
         playing.value = player.isPlaying
         val id = player.currentMediaItem?.mediaId?.toLongOrNull()
-        currentTrack.value = tracks.firstOrNull { it.id == id }
+        currentTrack.value = tracks.value.firstOrNull { it.id == id }
         positionMs.longValue = player.currentPosition.coerceAtLeast(0L)
         durationMs.longValue = player.duration.takeIf { it != C.TIME_UNSET && it > 0L }
             ?: currentTrack.value?.durationMs ?: 0L
     }
 
     private fun toggleFavorite(track: Track) {
-        if (favorites.contains(track.id)) favorites.remove(track.id) else favorites.add(track.id)
+        val updated = favorites.value.toMutableSet()
+        if (!updated.add(track.id)) updated.remove(track.id)
+        favorites.value = updated
         getSharedPreferences("klang", MODE_PRIVATE).edit()
-            .putStringSet("favorites", favorites.map { it.toString() }.toSet()).apply()
+            .putStringSet("favorites", updated.map { it.toString() }.toSet()).apply()
     }
 
     private fun createPlaylist(name: String) {
         val clean = name.trim()
         if (clean.isBlank()) return
-        if (!playlists.contains(clean)) playlists.add(clean)
-        getSharedPreferences("klang", MODE_PRIVATE).edit().putStringSet("playlists", playlists.toSet()).apply()
+        val updated = if (playlists.value.any { it.equals(clean, ignoreCase = true) }) playlists.value
+            else (playlists.value + clean).sorted()
+        playlists.value = updated
+        getSharedPreferences("klang", MODE_PRIVATE).edit().putStringSet("playlists", updated.toSet()).apply()
     }
 
     private fun editMetadata(track: Track, title: String, artist: String, album: String) {

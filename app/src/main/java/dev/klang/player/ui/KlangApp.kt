@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,14 +51,18 @@ private enum class Page(val label: String) {
 }
 
 private object AlbumArtCache {
-    val bitmaps = LruCache<Long, Bitmap>(24)
+    // Bound decoded artwork by memory use, not by number of albums.
+    val bitmaps = object : LruCache<Long, Bitmap>(8 * 1024) {
+        override fun sizeOf(key: Long, value: Bitmap): Int =
+            (value.allocationByteCount / 1024).coerceAtLeast(1)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KlangApp(
     tracks: List<Track>, currentTrack: Track?, isPlaying: Boolean, isLoading: Boolean, message: String?,
-    favoriteIds: Set<Long>, playlists: List<String>, positionMs: Long, durationMs: Long,
+    favoriteIds: Set<Long>, playlists: List<String>, positionMs: State<Long>, durationMs: State<Long>,
     volume: Int, maxVolume: Int, volumeOverlayVisible: Boolean,
     themeMode: String, accentColor: String, compactRows: Boolean,
     onPlayTrack: (Track) -> Unit, onTogglePlayback: () -> Unit, onNext: () -> Unit, onPrevious: () -> Unit,
@@ -83,7 +88,7 @@ fun KlangApp(
 
     val needle = query.trim()
     // Snapshot this SnapshotStateList so remember keys change when its contents change.
-    val libraryTracks = tracks.toList()
+    val libraryTracks = tracks
     val visibleTracks = remember(libraryTracks, needle, page, favoriteIds, sortMode) {
         val base = if (page == Page.Favorites) libraryTracks.filter { favoriteIds.contains(it.id) } else libraryTracks
         val searched = if (needle.isBlank()) base else base.filter { matches(it, needle) }
@@ -363,7 +368,21 @@ private fun AlbumTile(track: Track, modifier: Modifier = Modifier) {
             value = withContext(Dispatchers.IO) {
                 runCatching {
                     val uri = Uri.parse("content://media/external/audio/albumart/$albumId")
-                    context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) }
+                    context.contentResolver.openInputStream(uri)?.use { stream ->
+                        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                        BitmapFactory.decodeStream(stream, null, bounds)
+                        val maxDimension = maxOf(bounds.outWidth, bounds.outHeight)
+                        val sample = if (maxDimension > 256) (maxDimension / 256).coerceAtLeast(1) else 1
+                        context.contentResolver.openInputStream(uri)?.use { imageStream ->
+                            BitmapFactory.decodeStream(
+                                imageStream, null,
+                                BitmapFactory.Options().apply {
+                                    inSampleSize = sample
+                                    inPreferredConfig = Bitmap.Config.RGB_565
+                                }
+                            )
+                        }
+                    }
                 }.getOrNull()
             }
             value?.let { AlbumArtCache.bitmaps.put(albumId, it) }
@@ -386,11 +405,13 @@ private fun AlbumTile(track: Track, modifier: Modifier = Modifier) {
 
 @Composable
 private fun MiniPlayer(
-    track: Track, playing: Boolean, positionMs: Long, durationMs: Long,
+    track: Track, playing: Boolean, positionMs: State<Long>, durationMs: State<Long>,
     onOpen: () -> Unit, onToggle: () -> Unit, onNext: () -> Unit
 ) {
-    val duration = durationMs.takeIf { it > 0L } ?: track.durationMs
-    val progress = if (duration > 0L) (positionMs.toFloat() / duration).coerceIn(0f, 1f) else 0f
+    val currentPosition = positionMs.value
+    val playerDuration = durationMs.value
+    val duration = playerDuration.takeIf { it > 0L } ?: track.durationMs
+    val progress = if (duration > 0L) (currentPosition.toFloat() / duration).coerceIn(0f, 1f) else 0f
     Surface(
         Modifier.fillMaxWidth().clickable(onClick = onOpen),
         color = MaterialTheme.colorScheme.surfaceVariant, tonalElevation = 2.dp
@@ -596,16 +617,18 @@ private fun PlaylistDialog(onDismiss: () -> Unit, onSave: (String) -> Unit) {
 
 @Composable
 private fun FullPlayer(
-    track: Track, playing: Boolean, positionMs: Long, durationMs: Long, volume: Int, maxVolume: Int,
+    track: Track, playing: Boolean, positionMs: State<Long>, durationMs: State<Long>, volume: Int, maxVolume: Int,
     onVolumeChange: (Int) -> Unit, onClose: () -> Unit, onToggle: () -> Unit,
     onNext: () -> Unit, onPrevious: () -> Unit, onShuffle: () -> Unit, onRepeat: () -> Unit,
     isFavorite: Boolean, onFavorite: () -> Unit, onSeek: (Long) -> Unit
 ) {
-    val duration = durationMs.takeIf { it > 0L } ?: track.durationMs
+    val currentPosition = positionMs.value
+    val playerDuration = durationMs.value
+    val duration = playerDuration.takeIf { it > 0L } ?: track.durationMs
     var progress by remember(track.id) { mutableFloatStateOf(0f) }
     var isSeeking by remember(track.id) { mutableStateOf(false) }
-    LaunchedEffect(track.id, positionMs, duration) {
-        if (!isSeeking && duration > 0L) progress = (positionMs.toFloat() / duration).coerceIn(0f, 1f)
+    LaunchedEffect(track.id, currentPosition, duration) {
+        if (!isSeeking && duration > 0L) progress = (currentPosition.toFloat() / duration).coerceIn(0f, 1f)
     }
     AlertDialog(
         onDismissRequest = onClose, confirmButton = {},
@@ -636,7 +659,7 @@ private fun FullPlayer(
                     valueRange = 0f..1f
                 )
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(formatTime(positionMs), style = MaterialTheme.typography.labelSmall)
+                    Text(formatTime(currentPosition), style = MaterialTheme.typography.labelSmall)
                     Text(formatTime(duration), style = MaterialTheme.typography.labelSmall)
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly,
