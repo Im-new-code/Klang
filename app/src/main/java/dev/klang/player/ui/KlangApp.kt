@@ -82,8 +82,10 @@ fun KlangApp(
             track.album.contains(text, true) || track.folder.contains(text, true)
 
     val needle = query.trim()
-    val visibleTracks = remember(tracks, needle, page, favoriteIds, sortMode) {
-        val base = if (page == Page.Favorites) tracks.filter { favoriteIds.contains(it.id) } else tracks
+    // Snapshot this SnapshotStateList so remember keys change when its contents change.
+    val libraryTracks = tracks.toList()
+    val visibleTracks = remember(libraryTracks, needle, page, favoriteIds, sortMode) {
+        val base = if (page == Page.Favorites) libraryTracks.filter { favoriteIds.contains(it.id) } else libraryTracks
         val searched = if (needle.isBlank()) base else base.filter { matches(it, needle) }
         when (sortMode) {
             "Artist" -> searched.sortedWith(compareBy<Track> { it.artist.lowercase(Locale.ROOT) }.thenBy { it.title.lowercase(Locale.ROOT) })
@@ -91,12 +93,12 @@ fun KlangApp(
             else -> searched.sortedBy { it.title.lowercase(Locale.ROOT) }
         }
     }
-    val albums = remember(tracks, needle) {
-        tracks.groupBy { it.album.ifBlank { "Unknown album" } }.toSortedMap(java.lang.String.CASE_INSENSITIVE_ORDER)
+    val albums = remember(libraryTracks, needle) {
+        libraryTracks.groupBy { it.album.ifBlank { "Unknown album" } }.toSortedMap(java.lang.String.CASE_INSENSITIVE_ORDER)
             .filter { (name, songs) -> needle.isBlank() || name.contains(needle, true) || songs.any { matches(it, needle) } }
     }
-    val artists = remember(tracks, needle) {
-        tracks.groupBy { it.artist.ifBlank { "Unknown artist" } }.toSortedMap(String.CASE_INSENSITIVE_ORDER)
+    val artists = remember(libraryTracks, needle) {
+        libraryTracks.groupBy { it.artist.ifBlank { "Unknown artist" } }.toSortedMap(String.CASE_INSENSITIVE_ORDER)
             .filter { (name, songs) -> needle.isBlank() || name.contains(needle, true) || songs.any { matches(it, needle) } }
     }
     val visiblePlaylists = remember(playlists, needle) {
