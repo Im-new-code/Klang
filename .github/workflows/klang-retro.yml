@@ -203,9 +203,33 @@ jobs:
           echo "APK minSdk: $actual_min_sdk"
           test "$actual_min_sdk" = "27"
           echo "APK native libraries:"
-          unzip -Z1 "$apk" | grep -E '^lib/(arm64-v8a|armeabi-v7a|x86_64)/.*\.so$' | sed -n '1,80p'
-          unzip -Z1 "$apk" | grep -q '^lib/arm64-v8a/libmpv\.so$'
-          unzip -Z1 "$apk" | grep -q '^lib/arm64-v8a/libc\+\+_shared\.so$'
+          unzip -Z1 "$apk" | grep -E '^lib/(arm64-v8a|armeabi-v7a|x86_64)/.*[.]so$' | sed -n '1,80p'
+          unzip -Z1 "$apk" | grep -Fqx 'lib/arm64-v8a/libmpv.so'
+          unzip -Z1 "$apk" | grep -Fqx 'lib/arm64-v8a/libc++_shared.so'
+          unzip -Z1 "$apk" | grep -Fqx 'lib/x86_64/libmpv.so'
+
+      - name: Android 8.1 runtime smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 27
+          target: default
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            apk=build/app/outputs/flutter-apk/app-github-debug.apk
+            adb install "$apk"
+            adb logcat -c
+            adb shell monkey -p dev.klangretro.player -c android.intent.category.LAUNCHER 1
+            sleep 20
+            adb shell pidof dev.klangretro.player
+            adb shell dumpsys activity activities | grep -E 'mResumedActivity|ResumedActivity|topResumedActivity'
+            if adb logcat -d -s AndroidRuntime:E DEBUG:E | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
+              echo "Runtime smoke test found a fatal launch/native error."
+              exit 1
+            fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
