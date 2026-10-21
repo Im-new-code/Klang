@@ -311,11 +311,11 @@ class AppSettings {
   bool avatarDynamicColor = false;
 
   bool useNewFont = true;
-  String customFontFamily = 'Stack Sans Text';
+  String customFontFamily = 'Pixelify Sans';
   int customFontWeight = 400;
   int customFontWeightDelta = 0;
   bool useNewFontLyrics = true;
-  String customFontFamilyLyrics = 'Stack Sans Text';
+  String customFontFamilyLyrics = 'Pixelify Sans';
   String customFontWeightLyrics = 'Normal';
   int customFontWeightLyricsDelta = 0;
   int activeLyricsFontWeightDelta = 0;
