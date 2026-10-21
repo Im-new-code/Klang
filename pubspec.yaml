@@ -111,12 +111,12 @@ flutter:
     - assets/icons/social/
     - assets/images/
     - assets/images/about/
-    - family: Pixelify Sans
-      fonts:
-        - asset: assets/fonts/pixelify_sans.ttf
   shaders:
     - media/shaders/ambient_noise.frag
   fonts:
+    - family: Pixelify Sans
+      fonts:
+        - asset: assets/fonts/pixelify_sans.ttf
     - family: Jost
       fonts:
         - asset: assets/fonts/jost/Jost-Thin.ttf
