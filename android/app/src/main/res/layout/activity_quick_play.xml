@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Open with Looper" popup: the Dial home-screen widget at its design size. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <include
+        layout="@layout/player_widget_dial"
+        android:layout_width="347dp"
+        android:layout_height="193dp" />
+</FrameLayout>

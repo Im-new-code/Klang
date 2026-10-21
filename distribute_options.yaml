@@ -1,0 +1,38 @@
+output: dist/
+
+releases:
+  - name: dev
+    display_name: Looper Player
+    jobs:
+      - name: linux-deb
+        package:
+          platform: linux
+          target: deb
+        # Override the package name specifically for Debian to satisfy the hyphen rule
+        # while keeping the internal project name as looper_player for Dart compatibility.
+        maker_config:
+          package_name: looper-player
+        build_args:
+          --release:
+
+      - name: linux-rpm
+        package:
+          platform: linux
+          target: rpm
+        build_args:
+          --release:
+
+      - name: linux-appimage
+        package:
+          platform: linux
+          target: appimage
+        build_args:
+          --release:
+
+      - name: linux-archive
+        package:
+          platform: linux
+          target: archive
+        build_args:
+          --release:
+

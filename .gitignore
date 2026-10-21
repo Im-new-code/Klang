@@ -1,6 +1,91 @@
-*.iml
-.gradle/
-.idea/
-local.properties
-**/build/
+# AdMob/Firebase backup - holds real credentials (see docs/ADS_ANALYTICS_SETUP.md
+# for how to restore from it). Never commit this folder.
+ad_firebase/
+graphify-out/
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
 .DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+build/
+one-player.spec/
+.local/
+dist/
+test/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+*.spec
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+build/
+one-player.spec/
+.local/
+dist/
+
+
+# Generated from lib/l10n/*.arb by `flutter pub get` (pubspec `generate: true`).
+lib/l10n/app_localizations*.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android Signing & Local Files
+*.jks
+*.keystore
+*.p12
+*.pem
+.env
+**/android/key.properties
+scratch/
+log.txt
+*.zip
+test_svg.png
+
+# Analytics secrets - never commit these. Populate from scratch using
+# docs/ADS_ANALYTICS_SETUP.md; committed *.example templates document the
+# expected shape without real values.
+env.json
+android/app/src/main/assets/adi-registration.properties
+
+# Code-analysis tool cache output - not part of the project source.
+graphify-out/
+
+# Internal agent config/notes - not for the public repo.
+.agents/
+AGENTS.md
+docs/
+

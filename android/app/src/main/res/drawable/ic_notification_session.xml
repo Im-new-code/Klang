@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+    <!-- Traced from (AppAssets.sessionIcon, assets/images/session_icon.png)
+         so the media notification's status-bar icon matches the in-app session glyph,
+         instead of being re-derived from the launcher icon. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 37.32,48.51 L 48.73,49.37 L 60.99,54.53 L 114.12,90.03 L 137.36,108.96 L 142.52,116.06 L 145.1,125.1 L 144.89,132.41 L 142.52,139.72 L 136.5,147.9 L 129.61,154.14 L 69.81,196.3 L 55.61,204.05 L 44.64,207.49 L 37.54,207.49 L 31.52,205.77 L 23.34,200.61 L 19.68,196.09 L 15.38,184.69 L 12.8,162.1 L 12.8,93.9 L 15.6,70.24 L 17.96,62.92 L 22.27,56.47 L 29.58,51.09 L 37.32,48.51 Z M 149.41,47.65 L 156.72,47.65 L 165.97,51.09 L 187.05,65.72 L 232.66,105.3 L 239.54,113.91 L 243.2,123.59 L 243.2,132.84 L 241.48,138.43 L 237.82,144.67 L 230.94,152.42 L 181.46,194.58 L 167.48,204.05 L 156.5,208.35 L 149.19,208.35 L 143.6,206.63 L 136.71,202.97 L 131.98,198.67 L 126.6,187.48 L 124.24,170.27 L 124.67,168.12 L 138.65,156.72 L 148.33,147.04 L 153.92,139.08 L 156.29,132.41 L 155.64,121.01 L 150.48,111.54 L 139.29,99.93 L 124.24,87.45 L 125.74,72.17 L 129.83,60.34 L 138.43,51.95 L 149.41,47.65 Z" />
+</vector>

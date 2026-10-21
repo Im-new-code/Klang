@@ -1,0 +1,267 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- gal: saving the lyrics share PNG to the gallery on Android 10 (API 29) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <application
+        android:label="Klang Retro"
+        android:name="com.looper.player.LooperApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:extractNativeLibs="true"
+        android:enableOnBackInvokedCallback="true">
+
+        <!-- Player Widget Providers -->
+        <receiver android:name="com.looper.player.PlayerWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderSquareArtwork"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_square_artwork" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderSquareProgress"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_square_progress" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderLargeLyrics"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_large_lyrics" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_bar" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderMedium"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_medium" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderLargeArtwork"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_large_artwork" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderLargeArtworkInfo"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_large_artwork_info" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderTallArtwork"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_tall_artwork" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderTallArtworkInfo"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_tall_artwork_info" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderDial"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_dial" />
+        </receiver>
+
+        <receiver android:name="com.looper.player.PlayerWidgetProviderArtworkSide"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.looper.player.ACTION_PLAY_PAUSE" />
+                <action android:name="com.looper.player.ACTION_NEXT" />
+                <action android:name="com.looper.player.ACTION_PREV" />
+                <action android:name="com.looper.player.ACTION_SHUFFLE" />
+                <action android:name="com.looper.player.ACTION_REPEAT" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_artwork_side" />
+        </receiver>
+
+        <activity
+            android:name="com.looper.player.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+           
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- "Open with" for audio files from file managers etc.: a small
+             Dial-widget-style player that doesn't start the full app. -->
+        <activity
+            android:name="com.looper.player.QuickPlayActivity"
+            android:exported="true"
+            android:label="Looper Player"
+            android:icon="@mipmap/ic_launcher"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.looper.player.quickplay"
+            android:excludeFromRecents="true"
+            android:theme="@style/QuickPlayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-flac" />
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+
+        <service
+            android:name="com.looper.player.LooperTaskService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name="com.alesdrnz.mpv_audio_kit.media_session.MpvMediaSessionService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService"/>
+            </intent-filter>
+        </service>
+    </application>
+    <!-- Required to query activities that can process text or handle upi/http intents, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="upi"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>

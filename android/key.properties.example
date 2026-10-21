@@ -1,0 +1,6 @@
+
+# --- Release signing (required for a signed release build) ---
+storePassword=
+keyPassword=
+keyAlias=release
+storeFile=app/release.keystore
