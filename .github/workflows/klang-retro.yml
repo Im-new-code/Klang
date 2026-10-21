@@ -212,11 +212,19 @@ jobs:
           unzip -Z1 "$apk" | grep -Fqx 'lib/arm64-v8a/libc++_shared.so'
           unzip -Z1 "$apk" | grep -Fqx 'lib/x86_64/libmpv.so'
 
-      - name: Android 8.1 runtime smoke test
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Klang-Retro-debug-apk
+          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Android API 28 runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
-          target: google_apis
+          api-level: 28
+          target: default
           arch: x86_64
           profile: pixel_2
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
@@ -235,10 +243,3 @@ jobs:
               exit 1
             fi
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Klang-Retro-debug-apk
-          path: build/app/outputs/flutter-apk/app-github-debug.apk
-          if-no-files-found: error
-          retention-days: 14
