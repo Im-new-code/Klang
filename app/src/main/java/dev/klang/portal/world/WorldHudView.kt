@@ -14,6 +14,7 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.atan2
 import kotlin.math.hypot
+import kotlin.math.min
 
 /** Painted perspective HUD planes for the first milestone; coordinates use a virtual 1000x1600 surface. */
 class WorldHudView(context: Context) : View(context) {
@@ -32,6 +33,9 @@ class WorldHudView(context: Context) : View(context) {
     private var cover: Bitmap? = null
     private var draggingKnob = false
     private var lastHapticStep = -1
+    private var hudScale = 1f
+    private var hudOffsetX = 0f
+    private var hudOffsetY = 0f
 
     init {
         isFocusable = true
@@ -51,10 +55,18 @@ class WorldHudView(context: Context) : View(context) {
         invalidate()
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        hudScale = min(w / 1000f, h / 1600f).coerceAtLeast(0.01f)
+        hudOffsetX = (w - 1000f * hudScale) * 0.5f
+        hudOffsetY = (h - 1600f * hudScale) * 0.5f
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val save = canvas.save()
-        canvas.scale(width / 1000f, height / 1600f)
+        canvas.translate(hudOffsetX, hudOffsetY)
+        canvas.scale(hudScale, hudScale)
         drawFloatingWorldPanel(canvas)
         drawRecord(canvas)
         drawControls(canvas)
@@ -226,8 +238,8 @@ class WorldHudView(context: Context) : View(context) {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x * 1000f / width.coerceAtLeast(1)
-        val y = event.y * 1600f / height.coerceAtLeast(1)
+        val x = (event.x - hudOffsetX) / hudScale
+        val y = (event.y - hudOffsetY) / hudScale
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 if (hypot((x - 820f).toDouble(), (y - 1435f).toDouble()) <= 112.0) {

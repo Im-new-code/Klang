@@ -29,10 +29,8 @@ float fbm(vec2 p) {
 }
 void main() {
     vec2 uv = vTexCoord;
-    vec2 p = uv - 0.5;
-    p.x *= uResolution.x / max(1.0, uResolution.y);
-    p.x -= uParallax.x * 0.055;
-    p.y += uParallax.y * 0.035;
+    uv.x = clamp(uv.x - uParallax.x * 0.055, 0.001, 0.999);
+    uv.y = clamp(uv.y + uParallax.y * 0.035, 0.001, 0.999);
 
     float nightFromEvening = smoothstep(17.8, 21.3, uHour);
     float nightFromMorning = 1.0 - smoothstep(4.6, 7.4, uHour);
