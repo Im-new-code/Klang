@@ -88,14 +88,7 @@ dependency_overrides:
   # together with a metadata_god release built on a newer bridge.
   flutter_rust_bridge: 2.11.1
 
-flutter_launcher_icons:
-  android: true
-  ios: false
-  image_path: "assets/branding/launcher_icon.png"
-  adaptive_icon_background: "#242424" #55DF69"
-  adaptive_icon_foreground: "assets/branding/launcher_icon_adaptive.png"
-  adaptive_icon_foreground_inset: 0
-  min_sdk_android: 21
+# Launcher generation intentionally disabled; retain Looper's existing native icon resources.
 
 flutter:
   generate: true
