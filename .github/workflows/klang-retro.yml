@@ -197,8 +197,14 @@ jobs:
           set -euo pipefail
           apk=build/app/outputs/flutter-apk/app-github-debug.apk
           test -f "$apk"
-          actual_min_sdk="$(apkanalyzer manifest min-sdk "$apk")"
-          echo "APK minSdk: $actual_min_sdk"
+          sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          analyzer="$(find "$sdk_root" -type f -name apkanalyzer 2>/dev/null | sort -V | tail -n 1)"
+          if [ -z "$analyzer" ]; then
+            echo "Could not find apkanalyzer under $sdk_root"
+            exit 1
+          fi
+          actual_min_sdk="$("$analyzer" manifest min-sdk "$apk")"
+          echo "APK minSdk: $actual_min_sdk (via $analyzer)"
           test "$actual_min_sdk" = "27"
           echo "APK native libraries:"
           unzip -Z1 "$apk" | grep -E '^lib/(arm64-v8a|armeabi-v7a|x86_64)/.*[.]so$' | sed -n '1,80p'
