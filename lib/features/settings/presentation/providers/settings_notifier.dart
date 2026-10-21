@@ -256,7 +256,7 @@ class Settings extends _$Settings {
         ? (activeState.customFontFamily.isEmpty
               ? AppFonts.stackSansText
               : activeState.customFontFamily)
-        : 'Stack Sans Text';
+        : AppFonts.stackSansText;
     AppFonts.appFontWeightDelta = activeState.useNewFont
         ? activeState.customFontWeightDelta
         : 0;

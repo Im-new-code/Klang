@@ -257,7 +257,7 @@ class MyApp extends ConsumerWidget {
 
     final String fontFamily = useNewFont
         ? (customFontFamily.isEmpty ? 'Pixelify Sans' : customFontFamily)
-        : 'Jost';
+        : 'Pixelify Sans';
 
     final fontFallback = AppFonts.scriptFallbackFor(fontFamily);
     final textTheme = AppFonts.adjustTextTheme(
