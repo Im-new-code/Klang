@@ -230,7 +230,9 @@ jobs:
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
           disable-animations: true
           script: |
-            set -euo pipefail
+            # android-emulator-runner executes this block with /bin/sh, not bash.
+            # POSIX sh has no pipefail option; use its portable strict mode.
+            set -eu
             apk=build/app/outputs/flutter-apk/app-github-debug.apk
             adb install "$apk"
             adb logcat -c
