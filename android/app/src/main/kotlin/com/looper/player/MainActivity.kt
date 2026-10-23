@@ -845,9 +845,9 @@ class MainActivity : FlutterActivity() {
                 return try {
                     val userAction = current.javaClass.getMethod("getUserAction").invoke(current)
                         ?: return null
-                    val actionIntent = userAction.javaClass.getMethod("getActionIntent")
-                        .invoke(userAction) as? Intent ?: return null
-                    actionIntent.intentSender
+                    val actionPendingIntent = userAction.javaClass.getMethod("getActionIntent")
+                        .invoke(userAction) as? android.app.PendingIntent ?: return null
+                    actionPendingIntent.intentSender
                 } catch (reflectionError: Exception) {
                     Log.e("MediaWrite", "Could not read recoverable consent action", reflectionError)
                     null
