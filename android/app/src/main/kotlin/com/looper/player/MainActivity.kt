@@ -4,7 +4,6 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.app.Activity
-import android.app.RecoverableSecurityException
 import android.content.ContentValues
 import android.content.Intent
 import android.content.BroadcastReceiver
@@ -822,19 +821,67 @@ class MainActivity : FlutterActivity() {
     /// MediaStore row it doesn't own. [onGranted] re-attempts the operation
     /// from onActivityResult if the user approves; [declineValue] is handed
     /// back as-is if they dismiss it instead.
+    // RecoverableSecurityException was added in API 29. Avoid a direct class
+    // reference in this Activity so the class verifier can load it on API 27/28.
+    // On API 29+, read the public UserAction/Intent properties reflectively.
+    private fun isRecoverableSecurityException(e: Throwable?): Boolean {
+        var current = e
+        var depth = 0
+        while (current != null && depth < 6) {
+            if (current.javaClass.name == "android.app.RecoverableSecurityException") {
+                return true
+            }
+            current = current.cause
+            depth++
+        }
+        return false
+    }
+
+    private fun recoverableConsentIntentSender(e: Exception): android.content.IntentSender? {
+        var current: Throwable? = e
+        var depth = 0
+        while (current != null && depth < 6) {
+            if (current.javaClass.name == "android.app.RecoverableSecurityException") {
+                return try {
+                    val userAction = current.javaClass.getMethod("getUserAction").invoke(current)
+                        ?: return null
+                    val actionIntent = userAction.javaClass.getMethod("getActionIntent")
+                        .invoke(userAction) as? Intent ?: return null
+                    actionIntent.intentSender
+                } catch (reflectionError: Exception) {
+                    Log.e("MediaWrite", "Could not read recoverable consent action", reflectionError)
+                    null
+                }
+            }
+            current = current.cause
+            depth++
+        }
+        return null
+    }
+
     private fun requestConsentThenRetry(
-        e: RecoverableSecurityException,
+        e: Exception,
         result: MethodChannel.Result,
         declineValue: Any?,
         onGranted: () -> Unit
     ) {
+        val intentSender = recoverableConsentIntentSender(e)
+        if (intentSender == null) {
+            result.error(
+                "CONSENT_REQUEST_FAILED",
+                "The system did not provide a recoverable media consent action.",
+                null
+            )
+            return
+        }
+
         pendingMediaWriteResult = result
         pendingMediaWriteRetry = onGranted
         pendingMediaWriteDeclineValue = declineValue
         runOnUiThread {
             try {
                 startIntentSenderForResult(
-                    e.userAction.actionIntent.intentSender,
+                    intentSender,
                     MEDIA_WRITE_REQUEST_CODE, null, 0, 0, 0
                 )
             } catch (e2: Exception) {
@@ -860,21 +907,23 @@ class MainActivity : FlutterActivity() {
         try {
             contentResolver.delete(uri, null, null)
             runOnUiThread { result.success(true) }
-        } catch (e: RecoverableSecurityException) {
-            requestConsentThenRetry(e, result, false) {
-                Thread {
-                    val ok = try {
-                        contentResolver.delete(uri, null, null)
-                        true
-                    } catch (e2: Exception) {
-                        false
-                    }
-                    runOnUiThread { result.success(ok) }
-                }.start()
-            }
         } catch (e: Exception) {
-            Log.e("MediaWrite", "Failed to delete $path", e)
-            runOnUiThread { result.success(false) }
+            if (isRecoverableSecurityException(e)) {
+                requestConsentThenRetry(e, result, false) {
+                    Thread {
+                        val ok = try {
+                            contentResolver.delete(uri, null, null)
+                            true
+                        } catch (e2: Exception) {
+                            false
+                        }
+                        runOnUiThread { result.success(ok) }
+                    }.start()
+                }
+            } else {
+                Log.e("MediaWrite", "Failed to delete $path", e)
+                runOnUiThread { result.success(false) }
+            }
         }
     }
 
@@ -968,16 +1017,18 @@ class MainActivity : FlutterActivity() {
         try {
             val newPath = doRename()
             runOnUiThread { result.success(newPath) }
-        } catch (e: RecoverableSecurityException) {
-            requestConsentThenRetry(e, result, null) {
-                Thread {
-                    val newPath = try { doRename() } catch (e2: Exception) { null }
-                    runOnUiThread { result.success(newPath) }
-                }.start()
-            }
         } catch (e: Exception) {
-            Log.e("MediaWrite", "Failed to rename $path", e)
-            runOnUiThread { result.success(null) }
+            if (isRecoverableSecurityException(e)) {
+                requestConsentThenRetry(e, result, null) {
+                    Thread {
+                        val newPath = try { doRename() } catch (e2: Exception) { null }
+                        runOnUiThread { result.success(newPath) }
+                    }.start()
+                }
+            } else {
+                Log.e("MediaWrite", "Failed to rename $path", e)
+                runOnUiThread { result.success(null) }
+            }
         }
     }
 
@@ -1031,11 +1082,15 @@ class MainActivity : FlutterActivity() {
                 // would run for a real column change.
                 contentResolver.update(uri, ContentValues(), null, null)
                 retryAfterGrant()
-            } catch (rse: RecoverableSecurityException) {
-                requestConsentThenRetry(rse, result, false) { Thread { retryAfterGrant() }.start() }
             } catch (e3: Exception) {
-                Log.e("MediaWrite", "Failed to write tags for $path", e3)
-                runOnUiThread { result.success(false) }
+                if (isRecoverableSecurityException(e3)) {
+                    requestConsentThenRetry(e3, result, false) {
+                        Thread { retryAfterGrant() }.start()
+                    }
+                } else {
+                    Log.e("MediaWrite", "Failed to write tags for $path", e3)
+                    runOnUiThread { result.success(false) }
+                }
             }
         }
     }
