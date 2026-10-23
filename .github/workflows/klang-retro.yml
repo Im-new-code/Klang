@@ -235,7 +235,7 @@ jobs:
             set -eu
             # Use the literal artifact path here; the emulator action's
             # script wrapper can otherwise expand the local apk variable empty.
-            adb install build/app/outputs/flutter-apk/app-github-debug.apk
+            adb install ./build/app/outputs/flutter-apk/app-github-debug.apk
             adb logcat -c
             adb shell monkey -p dev.klangretro.player -c android.intent.category.LAUNCHER 1
             sleep 20
