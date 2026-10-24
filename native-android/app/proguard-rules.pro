@@ -1,0 +1,2 @@
+-keep class org.jaudiotagger.** { *; }
+-keep class androidx.media3.** { *; }

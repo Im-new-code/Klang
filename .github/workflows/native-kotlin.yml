@@ -1,0 +1,60 @@
+name: Klang Retro Native Kotlin
+
+on:
+  push:
+    branches:
+      - native-kotlin-rewrite
+    paths:
+      - "native-android/**"
+      - ".github/workflows/native-kotlin.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout native rewrite branch
+      - uses: actions/setup-java@v4
+        name: Set up Java 17
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+        name: Set up Android SDK
+      - name: Install Android SDK platform
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdkmanager --install "platforms;android-37" "build-tools;37.0.0" "platform-tools"
+          yes | sdkmanager --licenses >/dev/null || true
+      - uses: gradle/actions/setup-gradle@v4
+        name: Set up Gradle
+        with:
+          gradle-version: "8.13"
+      - name: Build native debug APK
+        working-directory: native-android
+        run: gradle --no-daemon assembleDebug
+      - name: Verify APK and minimum SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="native-android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          analyzer="$(find "$ANDROID_HOME" -type f -name apkanalyzer 2>/dev/null | sort -V | tail -n 1)"
+          test -n "$analyzer"
+          min_sdk="$("$analyzer" manifest min-sdk "$apk")"
+          echo "Native APK minSdk=$min_sdk"
+          test "$min_sdk" = "27"
+          echo "APK size: $(du -h "$apk" | cut -f1)"
+      - uses: actions/upload-artifact@v4
+        name: Upload native preview APK
+        with:
+          name: Klang-Retro-Native-Preview
+          path: native-android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
