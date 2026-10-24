@@ -4,7 +4,7 @@ plugins {
 }
 android {
     namespace = "dev.klangretro.player"
-    compileSdk = 37
+    compileSdk = 36
     defaultConfig {
         applicationId = "dev.klangretro.player"
         minSdk = 27
