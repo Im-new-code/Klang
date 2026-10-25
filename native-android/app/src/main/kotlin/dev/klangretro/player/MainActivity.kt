@@ -131,7 +131,10 @@ class MainActivity : Activity() {
             MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION)
         var cursor: Cursor? = null
         try {
-            cursor = contentResolver.query(base, cols, MediaStore.Audio.Media.IS_MUSIC + " != 0", null,
+            // Do not rely on IS_MUSIC here: Android 8.1 and some OEM media
+            // scanners classify user audio inconsistently. Query the indexed
+            // audio collection first, then keep readable audio rows.
+            cursor = contentResolver.query(base, cols, null, null,
                 MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC")
             cursor?.use { c ->
                 val id = c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
@@ -140,8 +143,7 @@ class MainActivity : Activity() {
                 val album = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
                 val duration = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
                 while (c.moveToNext()) {
-                    val ms = c.getLong(duration)
-                    if (ms <= 0) continue
+                    val ms = c.getLong(duration).coerceAtLeast(0L)
                     val trackId = c.getLong(id)
                     result.add(Track(trackId,
                         c.getString(title)?.takeIf { it.isNotBlank() } ?: "Unknown title",
@@ -150,10 +152,17 @@ class MainActivity : Activity() {
                         ms, Uri.withAppendedPath(base, trackId.toString())))
                 }
             }
-        } catch (e: Exception) { toast("Scan failed: " + (e.message ?: "storage error")) }
+        } catch (e: Exception) {
+            toast("Music scan failed: " + (e.message ?: e.javaClass.simpleName))
+            android.util.Log.e("KlangRetro", "MediaStore audio scan failed", e)
+        }
         tracks.clear()
         tracks.addAll(result)
+        android.util.Log.i("KlangRetro", "MediaStore scan completed: ${result.size} audio rows")
         draw()
+        if (result.isEmpty()) {
+            toast("No indexed audio found. Check Music/Downloads and try Rescan.")
+        }
     }
 
     private fun matching(): List<Track> = tracks.filter {
