@@ -1,165 +1,33 @@
-name: Klang Retro Android
+name: Klang Android CI
 
 on:
   push:
     branches:
       - player/looper-based-rebuild
+      - project/klang-liquid-glass
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 75
     steps:
-      - name: Checkout Klang Retro branch
+      - name: Check out the selected branch
         uses: actions/checkout@v4
         with:
-          ref: player/looper-based-rebuild
-          fetch-depth: 0
-
-      - name: Materialize Looper source and apply Klang Retro skin
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ ! -f pubspec.yaml ]; then
-            cp .github/workflows/klang-retro.yml /tmp/klang-retro.yml
-            if [ -f assets/branding/retro-cassette-placeholder.png ]; then
-              cp assets/branding/retro-cassette-placeholder.png /tmp/retro-cassette-placeholder.png
-            fi
-            git clone --depth 1 https://github.com/SthrNilshaaa/looper.git /tmp/looper
-            rsync -a --delete --exclude='.git/' --exclude='.github/workflows/klang-retro.yml' --exclude='.github/workflows/android.yml' /tmp/looper/ ./
-            mkdir -p .github/workflows assets/branding
-            cp /tmp/klang-retro.yml .github/workflows/klang-retro.yml
-            rm -f .github/workflows/release.yml
-            if [ -f /tmp/retro-cassette-placeholder.png ]; then
-              cp /tmp/retro-cassette-placeholder.png assets/branding/retro-cassette-placeholder.png
-            fi
-
-            python3 - <<'PY'
-          from pathlib import Path
-
-          def replace(path, old, new, count=1):
-              p = Path(path)
-              s = p.read_text()
-              if old not in s:
-                  raise SystemExit(f"Expected text not found in {path}: {old[:100]!r}")
-              p.write_text(s.replace(old, new, count))
-
-          replace("pubspec.yaml",
-                  'description: "Looper Player - A powerful music player."',
-                  'description: "Klang Retro: Looper-based music player with a pixel-art theme."')
-          replace("pubspec.yaml", 'version: 2.7.4+42', 'version: 0.1.0+1')
-          replace("android/app/build.gradle.kts", 'applicationId = "com.looper.player"', 'applicationId = "dev.klangretro.player"')
-          replace("android/app/build.gradle.kts", "minSdk = 29", "minSdk = 27")
-          replace("android/app/src/main/AndroidManifest.xml", 'android:label="Looper Player"', 'android:label="Klang Retro"')
-          replace("lib/main.dart", "title: 'Looper Player',", "title: 'Klang Retro',", 10)
-          replace("lib/main.dart",
-                  "final String fontFamily = useNewFont\n        ? (customFontFamily.isEmpty ? 'Stack Sans Text' : customFontFamily)\n        : 'Stack Sans Text';",
-                  "final String fontFamily = useNewFont\n        ? (customFontFamily.isEmpty ? 'Pixelify Sans' : customFontFamily)\n        : 'Pixelify Sans';")
-          replace("lib/main.dart", "colorScheme: colorScheme,",
-                  """colorScheme: colorScheme.copyWith(
-                      surface: const Color(0xFF171923),
-                      surfaceContainerLowest: const Color(0xFF11131A),
-                      surfaceContainerLow: const Color(0xFF191B24),
-                      surfaceContainer: const Color(0xFF20232D),
-                      surfaceContainerHigh: const Color(0xFF292C38),
-                      surfaceContainerHighest: const Color(0xFF323543),
-                      onSurface: const Color(0xFFFFE4B5),
-                      onSurfaceVariant: const Color(0xFFD1BFA8),
-                      secondary: const Color(0xFF72B9D0),
-                      outline: const Color(0xFF825A43),
-                      outlineVariant: const Color(0xFF44363A),
-                    ),
-                    cardTheme: CardThemeData(
-                      color: const Color(0xFF20232D),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: const BorderSide(color: Color(0xFF54372F)),
-                      ),
-                    ),
-                    dialogTheme: DialogThemeData(
-                      backgroundColor: const Color(0xFF20232D),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: const BorderSide(color: Color(0xFF54372F)),
-                      ),
-                    ),
-                    inputDecorationTheme: InputDecorationTheme(
-                      filled: true,
-                      fillColor: const Color(0xFF191B24),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF54372F)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF54372F)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
-                      ),
-                    ),
-                    elevatedButtonTheme: ElevatedButtonThemeData(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                    outlinedButtonTheme: OutlinedButtonThemeData(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                        side: const BorderSide(color: Color(0xFF825A43)),
-                      ),
-                    ),
-                    bottomSheetTheme: const BottomSheetThemeData(
-                      backgroundColor: Color(0xFF20232D),
-                      surfaceTintColor: Colors.transparent,
-                    ),""")
-          replace("lib/main.dart",
-                  "borderRadius: BorderRadius.circular(12),\n              side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),",
-                  "borderRadius: BorderRadius.circular(4),\n              side: const BorderSide(color: Color(0xFF54372F)),")
-          replace("lib/core/theme/app_fonts.dart", "static String activeFontFamily = 'Stack Sans Text';", "static String activeFontFamily = 'Pixelify Sans';")
-          replace("lib/core/theme/app_fonts.dart", "static const String stackSansText = 'Stack Sans Text';", "static const String stackSansText = 'Pixelify Sans';")
-          replace("lib/core/theme/app_fonts.dart", "    'Stack Sans Text',\n    'DM Sans',", "    'Pixelify Sans',\n    'DM Sans',")
-
-          pubspec = Path("pubspec.yaml")
-          content = pubspec.read_text()
-          if "family: Pixelify Sans" not in content:
-              marker = "  shaders:\n"
-              if marker not in content:
-                  raise SystemExit("Could not find the Flutter shaders section in pubspec.yaml")
-              content = content.replace(marker,
-                  "    - family: Pixelify Sans\n"
-                  "      fonts:\n"
-                  "        - asset: assets/fonts/pixelify_sans.ttf\n"
-                  + marker, 1)
-              pubspec.write_text(content)
-          PY
-
-            mkdir -p assets/fonts
-            curl --fail --location --retry 3 --retry-delay 2 \
-              'https://raw.githubusercontent.com/google/fonts/main/ofl/pixelifysans/PixelifySans%5Bwght%5D.ttf' \
-              --output assets/fonts/pixelify_sans.ttf
-
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -A
-            git commit -m "feat: import Looper source with Klang Retro skin"
-            git push origin HEAD:player/looper-based-rebuild
-          else
-            echo "Looper source already materialized; keeping existing source edits."
-          fi
+          ref: ${{ github.ref }}
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -168,81 +36,156 @@ jobs:
           cache: true
 
       - name: Resolve Flutter packages
-        run: |
-          dart pub get
-          find "${PUB_CACHE:-$HOME/.pub-cache}/hosted" \
-            -path '*/appambit_sdk_flutter-*/android/src/main/kotlin/*/AppambitSdkFlutterPlugin.kt' |
-          while read -r f; do
-            mv -v "$f" "$(dirname "$f")/AppAmbitSdkFlutterPlugin.kt"
-          done
-          flutter pub get
-
-      - name: Keep Looper's built-in launcher icon
-        run: |
-          # The upstream Android mipmap resources are WebP. Regenerating PNGs here
-          # creates duplicate Android resource names, so preserve the upstream icon.
-          test -f android/app/src/main/res/mipmap-hdpi/ic_launcher.webp
-          test -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-
-      - name: Analyze Dart source
-        run: flutter analyze --no-pub
-        # Fail CI on analyzer findings instead of hiding them.
-
-      - name: Build Android APK
-        run: flutter build apk --flavor github --debug
-
-      - name: Verify APK minimum SDK and device ABIs
         shell: bash
         run: |
           set -euo pipefail
-          apk=build/app/outputs/flutter-apk/app-github-debug.apk
-          test -f "$apk"
+          dart pub get
+          plugin_file="$(find "${PUB_CACHE:-$HOME/.pub-cache}/hosted" -path '*/appambit_sdk_flutter-*/android/src/main/kotlin/*/AppambitSdkFlutterPlugin.kt' -print -quit)"
+          if [ -n "$plugin_file" ]; then
+            mv -v "$plugin_file" "$(dirname "$plugin_file")/AppAmbitSdkFlutterPlugin.kt"
+          fi
+          flutter pub get
+
+      - name: Analyze Dart source
+        run: flutter analyze --no-pub
+
+      - name: Run Dart and Flutter tests
+        run: flutter test --no-pub --reporter expanded
+
+      - name: Build universal release APK
+        run: flutter build apk --flavor github --release --no-pub
+
+      - name: Build per-architecture release APKs
+        run: flutter build apk --flavor github --release --split-per-abi --no-pub
+
+      - name: Verify Android minimum SDK and native ABIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="build/app/outputs/flutter-apk"
+          universal="$out/app-github-release.apk"
+          arm32="$out/app-github-armeabi-v7a-release.apk"
+          arm64="$out/app-github-arm64-v8a-release.apk"
+          x64="$out/app-github-x86_64-release.apk"
+
+          for apk in "$universal" "$arm32" "$arm64" "$x64"; do
+            test -f "$apk"
+          done
+
           sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           analyzer="$(find "$sdk_root" -type f -name apkanalyzer 2>/dev/null | sort -V | tail -n 1)"
-          if [ -z "$analyzer" ]; then
-            echo "Could not find apkanalyzer under $sdk_root"
-            exit 1
-          fi
-          actual_min_sdk="$("$analyzer" manifest min-sdk "$apk")"
-          echo "APK minSdk: $actual_min_sdk (via $analyzer)"
-          test "$actual_min_sdk" = "27"
-          echo "APK native libraries:"
-          unzip -Z1 "$apk" | grep -E '^lib/(arm64-v8a|armeabi-v7a|x86_64)/.*[.]so$' | sed -n '1,80p'
-          unzip -Z1 "$apk" | grep -Fqx 'lib/arm64-v8a/libmpv.so'
-          unzip -Z1 "$apk" | grep -Fqx 'lib/arm64-v8a/libc++_shared.so'
-          unzip -Z1 "$apk" | grep -Fqx 'lib/x86_64/libmpv.so'
+          test -n "$analyzer"
 
-      - name: Upload APK
+          verify_min_sdk() {
+            actual="$("$analyzer" manifest min-sdk "$1")"
+            echo "$1 minimum SDK: $actual"
+            test "$actual" = "26"
+          }
+
+          verify_lib() {
+            apk="$1"
+            abi="$2"
+            unzip -Z1 "$apk" | grep -Fqx "lib/$abi/libmpv.so"
+          }
+
+          for apk in "$universal" "$arm32" "$arm64" "$x64"; do
+            verify_min_sdk "$apk"
+          done
+
+          verify_lib "$universal" "armeabi-v7a"
+          verify_lib "$universal" "arm64-v8a"
+          verify_lib "$universal" "x86_64"
+          verify_lib "$arm32" "armeabi-v7a"
+          verify_lib "$arm64" "arm64-v8a"
+          verify_lib "$x64" "x86_64"
+
+          echo "Release APK sizes:"
+          ls -lh "$universal" "$arm32" "$arm64" "$x64"
+
+      - name: Upload universal and architecture APKs
         uses: actions/upload-artifact@v4
         with:
-          name: Klang-Retro-debug-apk
-          path: build/app/outputs/flutter-apk/app-github-debug.apk
+          name: Klang-Android-release-APKs
+          path: build/app/outputs/flutter-apk/app-github*-release.apk
           if-no-files-found: error
           retention-days: 14
 
-      - name: Android API 28 runtime smoke test
+      - name: Android 8.0 (API 26) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: 26
           target: google_apis
           arch: x86_64
           profile: pixel_2
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
           disable-animations: true
           script: |
-            # android-emulator-runner executes this block with /bin/sh, not bash.
-            # POSIX sh has no pipefail option; use its portable strict mode.
             set -eu
-            # Use the literal artifact path here; the emulator action's
-            # script wrapper can otherwise expand the local apk variable empty.
-            adb install ./build/app/outputs/flutter-apk/app-github-debug.apk
+            adb wait-for-device
+            booted=""
+            attempt=0
+            while [ "$attempt" -lt 180 ]; do
+              booted="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
+              [ "$booted" = "1" ] && break
+              attempt=$((attempt + 1))
+              sleep 2
+            done
+            [ "$booted" = "1" ]
+            adb install -r ./build/app/outputs/flutter-apk/app-github-release.apk
             adb logcat -c
-            adb shell monkey -p dev.klangretro.player -c android.intent.category.LAUNCHER 1
-            sleep 20
-            adb shell pidof dev.klangretro.player
-            adb shell dumpsys activity activities | grep -E 'mResumedActivity|ResumedActivity|topResumedActivity'
-            if adb logcat -d -s AndroidRuntime:E DEBUG:E | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
-              echo "Runtime smoke test found a fatal launch/native error."
+            adb shell am start -n dev.klangretro.player/com.looper.player.MainActivity
+            attempt=0
+            app_pid=""
+            while [ "$attempt" -lt 30 ]; do
+              app_pid="$(adb shell pidof dev.klangretro.player 2>/dev/null | tr -d '\r')"
+              [ -n "$app_pid" ] && break
+              attempt=$((attempt + 1))
+              sleep 1
+            done
+            [ -n "$app_pid" ]
+            sleep 8
+            if adb logcat -d -v brief | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
+              echo "API 26 smoke test detected a fatal app or native-library error."
               exit 1
             fi
+            echo "API 26 launched Klang successfully (pid $app_pid)."
 
+      - name: Android 17 (API 37) runtime smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 37
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
+          disable-animations: true
+          script: |
+            set -eu
+            adb wait-for-device
+            booted=""
+            attempt=0
+            while [ "$attempt" -lt 180 ]; do
+              booted="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
+              [ "$booted" = "1" ] && break
+              attempt=$((attempt + 1))
+              sleep 2
+            done
+            [ "$booted" = "1" ]
+            adb install -r ./build/app/outputs/flutter-apk/app-github-release.apk
+            adb logcat -c
+            adb shell am start -n dev.klangretro.player/com.looper.player.MainActivity
+            attempt=0
+            app_pid=""
+            while [ "$attempt" -lt 30 ]; do
+              app_pid="$(adb shell pidof dev.klangretro.player 2>/dev/null | tr -d '\r')"
+              [ -n "$app_pid" ] && break
+              attempt=$((attempt + 1))
+              sleep 1
+            done
+            [ -n "$app_pid" ]
+            sleep 8
+            if adb logcat -d -v brief | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
+              echo "API 37 smoke test detected a fatal app or native-library error."
+              exit 1
+            fi
+            echo "API 37 launched Klang successfully (pid $app_pid)."
