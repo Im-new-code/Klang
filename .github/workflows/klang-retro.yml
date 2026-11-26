@@ -73,6 +73,7 @@ jobs:
             mv -v "$plugin_file" "$(dirname "$plugin_file")/AppAmbitSdkFlutterPlugin.kt"
           fi
           flutter pub get
+          python3 tool/patch_android_pub_cache.py
 
       - name: Regenerate source and ensure pinned Gradle wrapper
         shell: bash
