@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.klangretro.player"
-        minSdk = 27
+        minSdk = 26
         targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
