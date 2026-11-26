@@ -158,7 +158,9 @@ class AppSettings {
   bool dynamicLyrics = false;
   bool blurredArtworkForLyrics = true;
   int accentColor = 0xFF41C25E; // Default Green
-  bool audioFocus = true;
+  // Default to mixing with other apps: keep the player active when another app requests audio focus.
+  // Android 12+ and newer system audio policies may still fade or mute playback.
+  bool audioFocus = false;
   // Unused: audio focus is owned by mpv_audio_kit, which can't honour
   // these (nor pauseOnDuck / permanentAudioFocusChange below). Kept only
   // so the Isar schema and existing databases stay unchanged.
