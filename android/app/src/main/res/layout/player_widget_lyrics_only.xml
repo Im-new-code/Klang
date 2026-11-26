@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_lyrics_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_lyrics_glass_background"
+    android:padding="18dp">
+
+    <TextView
+        android:id="@+id/widget_lyric_active"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:includeFontPadding="false"
+        android:text="Lyrics will appear here..."
+        android:textColor="#F7F9FF"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
+        android:shadowColor="#66000000"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="4" />
+
+    <TextView
+        android:id="@+id/widget_lyric_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:includeFontPadding="false"
+        android:textColor="#9FE9F0FA"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif"
+        android:visibility="gone" />
+</LinearLayout>
