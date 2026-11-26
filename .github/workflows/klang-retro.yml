@@ -50,8 +50,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart run build_runner build --delete-conflicting-outputs
-          git add -- ':(glob)**/*.g.dart' ':(glob)**/*.freezed.dart'
+          dart run build_runner build
+          find . -type f \\( -name '*.g.dart' -o -name '*.freezed.dart' \\) -print0 | xargs -0 -r git add --
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
