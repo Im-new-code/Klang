@@ -246,7 +246,7 @@ class AudioService {
     // against.
     await player.setMediaSession(
       (current ?? const MediaSession()).copyWith(
-        appName: 'Looper Player',
+        appName: 'Klang',
         desktopEntry: 'looper_player',
         autoApplyPlaylistNavigation: false,
         actions: const {
@@ -469,7 +469,7 @@ class AudioService {
           artwork: resolvedArtwork,
           duration: duration,
           isFavorite: isFavorite,
-          appName: 'Looper Player',
+          appName: 'Klang',
           desktopEntry: 'looper_player',
           autoApplyPlaylistNavigation: false,
           actions: const {
