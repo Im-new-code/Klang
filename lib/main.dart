@@ -115,7 +115,7 @@ void main(List<String> args) async {
           center: position == null,
           skipTaskbar: false,
           titleBarStyle: TitleBarStyle.hidden,
-          title: 'Klang Retro',
+          title: 'Klang',
           backgroundColor: const Color(0xFF121214),
         );
         await windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -275,7 +275,7 @@ class MyApp extends ConsumerWidget {
         navigatorObservers: AppAmbitReporter.navigatorObservers,
         scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
-        title: 'Klang Retro',
+        title: 'Klang',
         color: Colors.transparent,
         theme: ThemeData(
           useMaterial3: true,
