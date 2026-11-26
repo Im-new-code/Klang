@@ -129,7 +129,7 @@ class LrcParser {
       final parsedLine = lines[i];
       final line = parsedLine.line;
       final nextLineTimestamp = (i < lines.length - 1)
-          ? lines[i + 1].timestamp
+          ? lines[i + 1].line.timestamp
           : line.timestamp + const Duration(seconds: 5);
       final lineDuration = nextLineTimestamp - line.timestamp;
 
