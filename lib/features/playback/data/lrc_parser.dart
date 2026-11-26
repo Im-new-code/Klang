@@ -27,6 +27,16 @@ class LrcLine {
   String toString() => '[${timestamp.inMilliseconds}] $text';
 }
 
+class _ParsedLrcLine {
+  final LrcLine line;
+  final bool hasEnhancedWordTimestamps;
+
+  const _ParsedLrcLine({
+    required this.line,
+    required this.hasEnhancedWordTimestamps,
+  });
+}
+
 class LrcParser {
   static final RegExp _lrcRegex = RegExp(r'\[(\d+):(\d+[\.:]\d+)\](.*)');
   static final RegExp _wordRegex = RegExp(r'<(\d+):(\d+[\.:]\d+)>(.*)');
@@ -43,7 +53,7 @@ class LrcParser {
   }
 
   static List<LrcLine> parse(String lrcContent) {
-    final List<LrcLine> lines = [];
+    final List<_ParsedLrcLine> lines = [];
     final rawLines = lrcContent.split('\n');
 
     for (var rawLine in rawLines) {
@@ -54,6 +64,7 @@ class LrcParser {
 
         // 1. Try to parse Enhanced LRC (word-level tags)
         List<LrcWord> words = [];
+        bool hasEnhancedWordTimestamps = false;
         if (content.contains('<')) {
           final parts = content.split(RegExp(r'(?=<)'));
           for (var part in parts) {
@@ -65,6 +76,7 @@ class LrcParser {
               );
               final wText = wordMatch.group(3)!.trim();
               if (wText.isNotEmpty) {
+                hasEnhancedWordTimestamps = true;
                 words.add(
                   LrcWord(
                     timestamp: wTimestamp,
@@ -94,24 +106,28 @@ class LrcParser {
         }
 
         lines.add(
-          LrcLine(
-            timestamp: timestamp,
-            text: words.isNotEmpty
-                ? words.map((w) => w.text).join(' ')
-                : content.trim(),
-            words: words,
+          _ParsedLrcLine(
+            line: LrcLine(
+              timestamp: timestamp,
+              text: words.isNotEmpty
+                  ? words.map((w) => w.text).join(' ')
+                  : content.trim(),
+              words: words,
+            ),
+            hasEnhancedWordTimestamps: hasEnhancedWordTimestamps,
           ),
         );
       }
     }
 
     // Sort by timestamp
-    lines.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    lines.sort((a, b) => a.line.timestamp.compareTo(b.line.timestamp));
 
     // Post-processing: Calculate durations and fix artificial word sync
     final List<LrcLine> processedLines = [];
     for (int i = 0; i < lines.length; i++) {
-      final line = lines[i];
+      final parsedLine = lines[i];
+      final line = parsedLine.line;
       final nextLineTimestamp = (i < lines.length - 1)
           ? lines[i + 1].timestamp
           : line.timestamp + const Duration(seconds: 5);
@@ -119,8 +135,9 @@ class LrcParser {
 
       List<LrcWord> processedWords = [];
       if (line.words.isNotEmpty) {
-        // If word-level tags existed, calculate durations based on next tags
-        if (line.words[0].timestamp != line.timestamp) {
+        // Explicit Enhanced LRC tags may start at the line timestamp, so
+        // track their presence instead of comparing the first timestamps.
+        if (parsedLine.hasEnhancedWordTimestamps) {
           // Real word-level tags
           for (int j = 0; j < line.words.length; j++) {
             final word = line.words[j];

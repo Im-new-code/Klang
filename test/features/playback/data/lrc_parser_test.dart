@@ -30,6 +30,14 @@ void main() {
         lines.single.words[1].timestamp,
         const Duration(milliseconds: 1500),
       );
+      expect(
+        lines.single.words[0].duration,
+        const Duration(milliseconds: 500),
+      );
+      expect(
+        lines.single.words[1].duration,
+        const Duration(milliseconds: 4500),
+      );
     });
 
     test('strips the internal lyrics source marker', () {
