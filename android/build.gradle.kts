@@ -33,7 +33,7 @@ subprojects {
     val forceCompileSdk = {
         val android = project.extensions.findByName("android")
         if (android != null) {
-            val sdkVersion = 36
+            val sdkVersion = 37
             try {
                 // Try setCompileSdk (AGP 7.0+)
                 val method = android.javaClass.getMethod("setCompileSdk", Int::class.javaPrimitiveType)

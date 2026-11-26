@@ -32,8 +32,21 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: "3.50.1"
           cache: true
+
+      - name: Verify Android toolchain versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter_version="$(flutter --version --machine | python3 -c 'import json, sys; print(json.load(sys.stdin)["frameworkVersion"])')"
+          echo "Flutter version: $flutter_version"
+          test "$flutter_version" = "3.50.1"
+          grep -Fqx 'distributionUrl=https\\://services.gradle.org/distributions/gradle-9.3.1-bin.zip' android/gradle/wrapper/gradle-wrapper.properties
+          grep -Fq 'id("com.android.application") version "9.1.1" apply false' android/settings.gradle.kts
+          gradle_version="$(cd android && ./gradlew --no-daemon --version | awk '/^Gradle / { print $2; exit }')"
+          echo "Gradle version: $gradle_version"
+          test "$gradle_version" = "9.3.1"
 
       - name: Resolve Flutter packages
         shell: bash
