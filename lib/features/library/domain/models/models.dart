@@ -158,7 +158,7 @@ class AppSettings {
   bool dynamicLyrics = false;
   bool blurredArtworkForLyrics = true;
   int accentColor = 0xFF41C25E; // Default Green
-  bool audioFocus = true;
+  bool audioFocus = false;
   // Unused: audio focus is owned by mpv_audio_kit, which can't honour
   // these (nor pauseOnDuck / permanentAudioFocusChange below). Kept only
   // so the Isar schema and existing databases stay unchanged.
