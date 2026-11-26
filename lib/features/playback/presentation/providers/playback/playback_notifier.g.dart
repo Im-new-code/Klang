@@ -47,7 +47,7 @@ abstract class _$Playback extends $Notifier<PlaybackState> {
   PlaybackState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PlaybackState, PlaybackState>;
     final element =
         ref.element
@@ -57,6 +57,6 @@ abstract class _$Playback extends $Notifier<PlaybackState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

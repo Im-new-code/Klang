@@ -7,7 +7,7 @@ part of 'models.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetSongCollection on Isar {
   IsarCollection<Song> get songs => this.collection();
@@ -192,7 +192,7 @@ const SongSchema = CollectionSchema(
   getId: _songGetId,
   getLinks: _songGetLinks,
   attach: _songAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _songEstimateSize(
@@ -4072,7 +4072,7 @@ extension SongQueryProperty on QueryBuilder<Song, Song, QQueryProperty> {
 }
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetAlbumCollection on Isar {
   IsarCollection<Album> get albums => this.collection();
@@ -4132,7 +4132,7 @@ const AlbumSchema = CollectionSchema(
   getId: _albumGetId,
   getLinks: _albumGetLinks,
   attach: _albumAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _albumEstimateSize(
@@ -5393,7 +5393,7 @@ extension AlbumQueryProperty on QueryBuilder<Album, Album, QQueryProperty> {
 }
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetArtistCollection on Isar {
   IsarCollection<Artist> get artists => this.collection();
@@ -5443,7 +5443,7 @@ const ArtistSchema = CollectionSchema(
   getId: _artistGetId,
   getLinks: _artistGetLinks,
   attach: _artistAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _artistEstimateSize(
@@ -6434,7 +6434,7 @@ extension ArtistQueryProperty on QueryBuilder<Artist, Artist, QQueryProperty> {
 }
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetPlayEventCollection on Isar {
   IsarCollection<PlayEvent> get playEvents => this.collection();
@@ -6501,7 +6501,7 @@ const PlayEventSchema = CollectionSchema(
   getId: _playEventGetId,
   getLinks: _playEventGetLinks,
   attach: _playEventAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _playEventEstimateSize(
@@ -8283,7 +8283,7 @@ extension PlayEventQueryProperty
 }
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetPlaylistCollection on Isar {
   IsarCollection<Playlist> get playlists => this.collection();
@@ -8342,7 +8342,7 @@ const PlaylistSchema = CollectionSchema(
   getId: _playlistGetId,
   getLinks: _playlistGetLinks,
   attach: _playlistAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _playlistEstimateSize(
@@ -9392,7 +9392,7 @@ extension PlaylistQueryProperty
 }
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types, experimental_member_use
 
 extension GetAppSettingsCollection on Isar {
   IsarCollection<AppSettings> get appSettings => this.collection();
@@ -10073,7 +10073,7 @@ const AppSettingsSchema = CollectionSchema(
   getId: _appSettingsGetId,
   getLinks: _appSettingsGetLinks,
   attach: _appSettingsAttach,
-  version: '3.3.2',
+  version: '3.4.1',
 );
 
 int _appSettingsEstimateSize(
