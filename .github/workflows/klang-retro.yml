@@ -107,7 +107,7 @@ jobs:
           test "$wrapper_gradle_version" = "9.5.0"
 
           find . -type f -name '*.g.dart' -print0 | xargs -0 -r git add --
-          git add -- android/gradlew android/gradlew.bat android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties
+          git add -- android/.gitignore android/gradlew android/gradlew.bat android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
