@@ -42,11 +42,11 @@ jobs:
           flutter_version="$(flutter --version --machine | python3 -c 'import json, sys; print(json.load(sys.stdin)["frameworkVersion"])')"
           echo "Flutter version: $flutter_version"
           test "$flutter_version" = "3.50.1"
-          grep -Fqx 'distributionUrl=https\\://services.gradle.org/distributions/gradle-9.3.1-bin.zip' android/gradle/wrapper/gradle-wrapper.properties
-          grep -Fq 'id("com.android.application") version "9.1.1" apply false' android/settings.gradle.kts
+          grep -Fqx 'distributionUrl=https\\://services.gradle.org/distributions/gradle-9.5.0-bin.zip' android/gradle/wrapper/gradle-wrapper.properties
+          grep -Fq 'id("com.android.application") version "9.3.1" apply false' android/settings.gradle.kts
           gradle_version="$(cd android && ./gradlew --no-daemon --version | awk '/^Gradle / { print $2; exit }')"
           echo "Gradle version: $gradle_version"
-          test "$gradle_version" = "9.3.1"
+          test "$gradle_version" = "9.5.0"
 
       - name: Resolve Flutter packages
         shell: bash
