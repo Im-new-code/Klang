@@ -653,7 +653,7 @@ class Playback extends _$Playback {
     _songCompletionTimer?.cancel();
     _pausedForRouteChange = false;
     final settings = ref.read(settingsProvider);
-    if (play && blockDuringCall && settings.audioFocus) {
+    if (play && blockDuringCall) {
       final onCall = await ref.read(audioServiceProvider).isOnCall();
       if (onCall) {
         _showErrorSnackBar(
@@ -1178,8 +1178,7 @@ class Playback extends _$Playback {
     _updateNotification();
 
     try {
-      if (ref.read(settingsProvider).audioFocus &&
-          await ref.read(audioServiceProvider).isOnCall()) {
+      if (await ref.read(audioServiceProvider).isOnCall()) {
         state = state.copyWith(isPlaying: false);
         _updateNotification();
         _showErrorSnackBar(
