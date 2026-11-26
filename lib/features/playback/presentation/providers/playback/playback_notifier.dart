@@ -2024,6 +2024,7 @@ class Playback extends _$Playback {
     'PlayerWidgetProviderSquareArtwork',
     'PlayerWidgetProviderSquareProgress',
     'PlayerWidgetProviderLargeLyrics',
+    'PlayerWidgetProviderLyricsOnly',
     'PlayerWidgetProviderBar',
     'PlayerWidgetProviderMedium',
     'PlayerWidgetProviderLargeArtwork',
