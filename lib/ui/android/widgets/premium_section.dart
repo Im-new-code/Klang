@@ -87,26 +87,37 @@ class PremiumSection extends ConsumerWidget {
         (useBlur || forceBlur) && !disableBlur && !isTransitioning;
 
     final borderSide = BorderSide(
-      color: Colors.white.withValues(alpha: 0.05),
+      color: Colors.white.withValues(alpha: 0.13),
       width: showBorder ? 0.8 : 0,
     );
+
+    final fallbackSurface = backgroundColor ??
+        ((useBlur || forceBlur)
+            ? (isTransitioning
+                ? Colors.black.withValues(alpha: 0.18)
+                : (disableBlur && !keepSurfaceOnDisableBlur
+                    ? Colors.white.withValues(alpha: 0.055)
+                    : Theme.of(context).colorScheme.surfaceContainer.withValues(alpha: 0.94)))
+            : Theme.of(context).colorScheme.surfaceContainer);
 
     final decoration = forceTransparent
         ? const BoxDecoration(color: Colors.transparent)
         : BoxDecoration(
-            color:
-                backgroundColor ??
-                (isBlurActive
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : ((useBlur || forceBlur)
-                          ? (isTransitioning
-                                ? Colors.black.withValues(alpha: 0.12)
-                                : (disableBlur && !keepSurfaceOnDisableBlur
-                                      ? Colors.white.withValues(alpha: 0.05)
-                                      : Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainer))
-                          : Theme.of(context).colorScheme.surfaceContainer)),
+            color: isBlurActive && backgroundColor == null
+                ? null
+                : fallbackSurface,
+            gradient: isBlurActive && backgroundColor == null
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.13),
+                      Colors.white.withValues(alpha: 0.055),
+                      Colors.white.withValues(alpha: 0.025),
+                    ],
+                    stops: const [0, 0.48, 1],
+                  )
+                : null,
             borderRadius: borderRadius,
             border: showBorder
                 ? Border(
@@ -116,14 +127,21 @@ class PremiumSection extends ConsumerWidget {
                     right: showRightBorder ? borderSide : BorderSide.none,
                   )
                 : null,
-            boxShadow: showShadow
+            boxShadow: showShadow || isBlurActive
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.4),
-                      blurRadius: 15,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 4),
+                      color: Colors.black.withValues(alpha: showShadow ? 0.28 : 0.18),
+                      blurRadius: showShadow ? 18 : 14,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 6),
                     ),
+                    if (isBlurActive)
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.035),
+                        blurRadius: 1,
+                        spreadRadius: 0,
+                        offset: const Offset(0, -1),
+                      ),
                   ]
                 : null,
           );
