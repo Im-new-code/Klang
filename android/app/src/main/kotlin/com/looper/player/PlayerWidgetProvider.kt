@@ -35,6 +35,7 @@ open class PlayerWidgetProvider : AppWidgetProvider() {
         val legacy: Boolean = false,
         val hasProgress: Boolean = false,
         val hasLyrics: Boolean = false,
+        val lyricsOnly: Boolean = false,
         // Size from the design, used until the launcher reports a real one
         val designWidthDp: Int = 0,
         val designHeightDp: Int = 0,
@@ -56,6 +57,7 @@ open class PlayerWidgetProvider : AppWidgetProvider() {
             PlayerWidgetProviderSquareArtwork::class.java,
             PlayerWidgetProviderSquareProgress::class.java,
             PlayerWidgetProviderLargeLyrics::class.java,
+            PlayerWidgetProviderLyricsOnly::class.java,
             PlayerWidgetProviderBar::class.java,
             PlayerWidgetProviderMedium::class.java,
             PlayerWidgetProviderLargeArtwork::class.java,
@@ -74,6 +76,8 @@ open class PlayerWidgetProvider : AppWidgetProvider() {
                     WidgetSpec(R.layout.player_widget_square_progress, legacy = true, hasProgress = true)
                 PlayerWidgetProviderLargeLyrics::class.java ->
                     WidgetSpec(R.layout.player_widget_large_lyrics, legacy = true, hasLyrics = true)
+                PlayerWidgetProviderLyricsOnly::class.java ->
+                    WidgetSpec(R.layout.player_widget_lyrics_only, hasLyrics = true, lyricsOnly = true)
                 PlayerWidgetProviderBar::class.java ->
                     WidgetSpec(R.layout.player_widget_bar, art = { _, _ -> ArtBox(50, 50) })
                 PlayerWidgetProviderMedium::class.java ->
@@ -155,64 +159,77 @@ open class PlayerWidgetProvider : AppWidgetProvider() {
 
                 Log.d("PlayerWidget", "PlayerWidgetProvider: updateWidget: provider=${providerClass.simpleName}, id=$appWidgetId, title=$title, artist=$artist, isPlaying=$isPlaying, accentColor=$accentColor")
 
-                if (spec.legacy && layoutId != R.layout.player_widget_square_artwork) {
-                    views.setInt(R.id.widget_background_image, "setColorFilter", Color.BLACK)
-                }
-
-                // Set song metadata
-                views.setTextViewText(R.id.widget_title, title)
-                views.setTextViewText(R.id.widget_artist, artist)
-
-                // Set play/pause icon and play container background color
-                if (spec.legacy) {
-                    views.setImageViewResource(R.id.widget_play_pause, if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
-                    // Apply accent colors dynamically to the circular background ImageView
-                    views.setInt(R.id.widget_play_pause_background, "setColorFilter", accentColor)
-                } else {
-                    views.setImageViewResource(R.id.widget_play_pause, if (isPlaying) R.drawable.ic_widget_pause else R.drawable.ic_widget_play)
-                }
-
-                if (spec.hasProgress) {
-                    val position = readLong(prefs, "position")
-                    val duration = readLong(prefs, "duration")
-                    val progress = if (duration > 0) (position * 100 / duration).toInt().coerceIn(0, 100) else 0
-                    views.setProgressBar(R.id.widget_progress, 100, progress, false)
-                }
-
                 if (spec.hasLyrics) {
-                    views.setTextViewText(R.id.widget_lyric_active, if (lyrics.isNotEmpty()) lyrics else "Lyrics will appear here...")
-                    views.setTextViewText(R.id.widget_lyric_next, nextLyrics)
-                    views.setViewVisibility(R.id.widget_lyric_next, if (lyrics.isNotEmpty() && nextLyrics.isNotEmpty()) View.VISIBLE else View.GONE)
-                }
-
-                val artFile = resolveArtFile(context, artPath)
-                val artSpec = spec.art
-                if (artSpec == null) {
-                    bindLegacyArtwork(views, artFile)
-                } else {
-                    val (widthDp, heightDp) = widgetSizeDp(
-                        context, options ?: appWidgetManager.getAppWidgetOptions(appWidgetId), spec
+                    views.setTextViewText(
+                        R.id.widget_lyric_active,
+                        if (lyrics.isNotEmpty()) lyrics else "Lyrics will appear here..."
                     )
-                    views.setImageViewBitmap(R.id.widget_artwork, renderArtwork(context, artFile, artSpec(widthDp, heightDp)))
+                    views.setTextViewText(R.id.widget_lyric_next, nextLyrics)
+                    views.setViewVisibility(
+                        R.id.widget_lyric_next,
+                        if (lyrics.isNotEmpty() && nextLyrics.isNotEmpty()) View.VISIBLE else View.GONE
+                    )
                 }
 
-                // Add PendingIntents for clicks
-                views.setOnClickPendingIntent(R.id.widget_play_pause_container, getPendingIntent(context, ACTION_PLAY_PAUSE, providerClass))
-                views.setOnClickPendingIntent(R.id.widget_next, getPendingIntent(context, ACTION_NEXT, providerClass))
-                if (layoutId != R.layout.player_widget_large_lyrics && layoutId != R.layout.player_widget_bar) {
-                    views.setOnClickPendingIntent(R.id.widget_prev, getPendingIntent(context, ACTION_PREV, providerClass))
-                }
+                if (!spec.lyricsOnly) {
+                    if (spec.legacy && layoutId != R.layout.player_widget_square_artwork) {
+                        views.setInt(R.id.widget_background_image, "setColorFilter", Color.BLACK)
+                    }
 
-                // Launch app intent when title, artist or artwork is clicked
-                val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-                val launchPendingIntent = PendingIntent.getActivity(
-                    context, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                if (layoutId != R.layout.player_widget_large_artwork && layoutId != R.layout.player_widget_tall_artwork) {
-                    views.setOnClickPendingIntent(R.id.widget_title, launchPendingIntent)
-                    views.setOnClickPendingIntent(R.id.widget_artist, launchPendingIntent)
+                    // Set song metadata
+                    views.setTextViewText(R.id.widget_title, title)
+                    views.setTextViewText(R.id.widget_artist, artist)
+
+                    // Set play/pause icon and play container background color
+                    if (spec.legacy) {
+                        views.setImageViewResource(R.id.widget_play_pause, if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
+                        views.setInt(R.id.widget_play_pause_background, "setColorFilter", accentColor)
+                    } else {
+                        views.setImageViewResource(R.id.widget_play_pause, if (isPlaying) R.drawable.ic_widget_pause else R.drawable.ic_widget_play)
+                    }
+
+                    if (spec.hasProgress) {
+                        val position = readLong(prefs, "position")
+                        val duration = readLong(prefs, "duration")
+                        val progress = if (duration > 0) (position * 100 / duration).toInt().coerceIn(0, 100) else 0
+                        views.setProgressBar(R.id.widget_progress, 100, progress, false)
+                    }
+
+                    val artFile = resolveArtFile(context, artPath)
+                    val artSpec = spec.art
+                    if (artSpec == null) {
+                        bindLegacyArtwork(views, artFile)
+                    } else {
+                        val (widthDp, heightDp) = widgetSizeDp(
+                            context, options ?: appWidgetManager.getAppWidgetOptions(appWidgetId), spec
+                        )
+                        views.setImageViewBitmap(R.id.widget_artwork, renderArtwork(context, artFile, artSpec(widthDp, heightDp)))
+                    }
+
+                    // Add PendingIntents for the player controls.
+                    views.setOnClickPendingIntent(R.id.widget_play_pause_container, getPendingIntent(context, ACTION_PLAY_PAUSE, providerClass))
+                    views.setOnClickPendingIntent(R.id.widget_next, getPendingIntent(context, ACTION_NEXT, providerClass))
+                    if (layoutId != R.layout.player_widget_large_lyrics && layoutId != R.layout.player_widget_bar) {
+                        views.setOnClickPendingIntent(R.id.widget_prev, getPendingIntent(context, ACTION_PREV, providerClass))
+                    }
+
+                    // Launch the app when metadata or artwork is tapped.
+                    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                    val launchPendingIntent = PendingIntent.getActivity(
+                        context, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                    if (layoutId != R.layout.player_widget_large_artwork && layoutId != R.layout.player_widget_tall_artwork) {
+                        views.setOnClickPendingIntent(R.id.widget_title, launchPendingIntent)
+                        views.setOnClickPendingIntent(R.id.widget_artist, launchPendingIntent)
+                    }
+                    views.setOnClickPendingIntent(R.id.widget_artwork, launchPendingIntent)
+                } else {
+                    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                    val launchPendingIntent = PendingIntent.getActivity(
+                        context, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                    views.setOnClickPendingIntent(R.id.widget_lyrics_root, launchPendingIntent)
                 }
-                views.setOnClickPendingIntent(R.id.widget_artwork, launchPendingIntent)
 
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             } catch (t: Throwable) {
@@ -501,6 +518,7 @@ open class PlayerWidgetProvider : AppWidgetProvider() {
 class PlayerWidgetProviderSquareArtwork : PlayerWidgetProvider()
 class PlayerWidgetProviderSquareProgress : PlayerWidgetProvider()
 class PlayerWidgetProviderLargeLyrics : PlayerWidgetProvider()
+class PlayerWidgetProviderLyricsOnly : PlayerWidgetProvider()
 class PlayerWidgetProviderBar : PlayerWidgetProvider()
 class PlayerWidgetProviderMedium : PlayerWidgetProvider()
 class PlayerWidgetProviderLargeArtwork : PlayerWidgetProvider()
