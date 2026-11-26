@@ -23,11 +23,11 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Set up Java
+      - name: Set up Java 21 for Android Gradle and lint
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "21"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -47,6 +47,10 @@ jobs:
           flutter_version="$(flutter --version --machine | python3 -c 'import json, sys; print(json.load(sys.stdin)["frameworkVersion"])')"
           echo "Flutter version: $flutter_version"
           test "$flutter_version" = "3.50.1"
+
+          java_version="$(java -XshowSettings:properties -version 2>&1 | awk -F' = ' '/java.specification.version/ { print $2; exit }')"
+          echo "Gradle runtime Java version: $java_version"
+          test "$java_version" = "21"
 
           gradle_version="$(gradle --version | awk '/^Gradle / { print $2; exit }')"
           echo "Provisioned Gradle version: $gradle_version"
