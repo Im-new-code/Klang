@@ -1,5 +1,5 @@
 name: looper_player
-description: "Klang Retro: Looper-based music player with a pixel-art theme."
+description: "Klang: a lightweight Android music player with synchronised lyrics."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
