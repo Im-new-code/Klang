@@ -220,13 +220,18 @@ jobs:
             fi
             echo "API 26 launched Klang successfully (pid $app_pid)."
 
-      - name: Android 17 (API 37) runtime smoke test
+      - name: Android 17 (API 37.2) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 37
-          target: google_apis
+          # Google retired the 37.0 image line in November 2026; 37.2 is the
+          # current Android 17 platform/system-image revision on hosted runners.
+          api-level: 37.2
+          system-image-api-level: 37.2
+          target: google_apis_ps16k
           arch: x86_64
           profile: pixel_2
+          ram-size: 4096M
+          disk-size: 8G
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
           disable-animations: true
           script: |
