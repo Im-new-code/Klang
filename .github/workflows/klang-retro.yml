@@ -35,6 +35,11 @@ jobs:
           flutter-version: "3.50.1"
           cache: true
 
+      - name: Set up Gradle 9.5.0
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.5.0"
+
       - name: Verify Android toolchain versions
         shell: bash
         run: |
@@ -42,11 +47,21 @@ jobs:
           flutter_version="$(flutter --version --machine | python3 -c 'import json, sys; print(json.load(sys.stdin)["frameworkVersion"])')"
           echo "Flutter version: $flutter_version"
           test "$flutter_version" = "3.50.1"
-          grep -Fq 'gradle-9.5.0-bin.zip' android/gradle/wrapper/gradle-wrapper.properties
-          grep -Fq 'id("com.android.application") version "9.3.1" apply false' android/settings.gradle.kts
-          gradle_version="$(cd android && ./gradlew --no-daemon --version | awk '/^Gradle / { print $2; exit }')"
-          echo "Gradle version: $gradle_version"
+
+          gradle_version="$(gradle --version | awk '/^Gradle / { print $2; exit }')"
+          echo "Provisioned Gradle version: $gradle_version"
           test "$gradle_version" = "9.5.0"
+
+          grep -Fq 'gradle-9.5.0-bin.zip' android/gradle/wrapper/gradle-wrapper.properties
+          grep -Fq 'distributionSha256Sum=553c78f50dafcd54d65b9a444649057857469edf836431389695608536d6b746' android/gradle/wrapper/gradle-wrapper.properties
+          grep -Fq 'id("com.android.application") version "9.3.1" apply false' android/settings.gradle.kts
+          grep -Fq 'id("org.jetbrains.kotlin.android") version "2.4.20" apply false' android/settings.gradle.kts
+          grep -Fq 'minSdk = 26' android/app/build.gradle.kts
+          grep -Fq 'targetSdk = 37' android/app/build.gradle.kts
+          grep -Fq 'compileSdk = 37' android/app/build.gradle.kts
+          grep -Fq 'val sdkVersion = 37' android/build.gradle.kts
+          grep -Fq 'android.builtInKotlin=false' android/gradle.properties
+          grep -Fq 'android.newDsl=false' android/gradle.properties
 
       - name: Resolve Flutter packages
         shell: bash
@@ -59,16 +74,44 @@ jobs:
           fi
           flutter pub get
 
-      - name: Regenerate Riverpod and Isar source
+      - name: Regenerate source and ensure pinned Gradle wrapper
         shell: bash
         run: |
           set -euo pipefail
           dart run build_runner build
+
+          # The imported Android project had wrapper properties but was missing
+          # the wrapper scripts and JAR. Bootstrap the official wrapper using
+          # the Gradle version provisioned above, without evaluating the app.
+          if [ ! -x android/gradlew ] || [ ! -f android/gradle/wrapper/gradle-wrapper.jar ]; then
+            wrapper_tmp="$(mktemp -d)"
+            trap 'rm -rf "$wrapper_tmp"' EXIT
+            printf "rootProject.name = 'gradle-wrapper-bootstrap'\n" > "$wrapper_tmp/settings.gradle"
+            : > "$wrapper_tmp/build.gradle"
+            (
+              cd "$wrapper_tmp"
+              gradle wrapper --gradle-version 9.5.0 --distribution-type bin
+            )
+            install -m 755 "$wrapper_tmp/gradlew" android/gradlew
+            install -m 644 "$wrapper_tmp/gradlew.bat" android/gradlew.bat
+            install -m 644 "$wrapper_tmp/gradle/wrapper/gradle-wrapper.jar" android/gradle/wrapper/gradle-wrapper.jar
+          fi
+
+          chmod +x android/gradlew
+          wrapper_sha256="$(sha256sum android/gradle/wrapper/gradle-wrapper.jar | awk '{ print $1 }')"
+          echo "Gradle Wrapper JAR SHA-256: $wrapper_sha256"
+          test "$wrapper_sha256" = "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7"
+
+          wrapper_gradle_version="$(cd android && ./gradlew --no-daemon --version | awk '/^Gradle / { print $2; exit }')"
+          echo "Wrapper Gradle version: $wrapper_gradle_version"
+          test "$wrapper_gradle_version" = "9.5.0"
+
           find . -type f -name '*.g.dart' -print0 | xargs -0 -r git add --
+          git add -- android/gradlew android/gradlew.bat android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore(codegen): refresh generated Dart files [skip ci]"
+            git commit -m "chore(codegen): refresh generated sources and Gradle wrapper [skip ci]"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
 
