@@ -91,7 +91,7 @@ app_pid_after="$(adb -s "$serial" shell pidof "$package_name" 2>/dev/null | tr -
 # platform issues look like application failures.
 read -r -a app_pids <<< "$app_pid $app_pid_after"
 checked_pids=()
-fatal_log=""
+found_fatal=0
 for pid in "${app_pids[@]}"; do
   [[ "$pid" =~ ^[0-9]+$ ]] || continue
 
@@ -104,21 +104,15 @@ for pid in "${app_pids[@]}"; do
     fail "could not inspect logcat for Klang process PID $pid: $pid_log"
   fi
 
-  pid_fatal="$(printf '%s\\n' "$pid_log" | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal' || true)"
+  pid_fatal="$(printf '%s\n' "$pid_log" | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal' || true)"
   if [[ -n "$pid_fatal" ]]; then
-    fatal_log+=
-
-echo "API $api_level launched Klang successfully (pid $app_pid_after)."
-\\n'"Klang PID $pid:"
-
-echo "API $api_level launched Klang successfully (pid $app_pid_after)."
-\\n'"$pid_fatal"
+    printf 'Klang PID %s:\n%s\n' "$pid" "$pid_fatal" >&2
+    found_fatal=1
   fi
 done
 
 echo "Checked Klang process logcat for PID(s): ${checked_pids[*]}"
-if [[ -n "$fatal_log" ]]; then
-  echo "$fatal_log" >&2
+if [[ "$found_fatal" == "1" ]]; then
   fail "fatal Java or native-library error detected in Klang process"
 fi
 
