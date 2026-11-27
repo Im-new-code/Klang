@@ -22,7 +22,7 @@ dump_diagnostics() {
   echo "::group::Emulator diagnostics (API $api_level)"
   adb -s "$serial" devices -l || true
   adb -s "$serial" shell getprop ro.build.version.sdk || true
-  adb -s "$serial" shell "awk '/^KernelPageSize:/ {print \\$2; exit}' /proc/self/smaps" || true
+  adb -s "$serial" shell "grep -m1 '^KernelPageSize:' /proc/self/smaps" || true
   adb -s "$serial" shell dumpsys activity activities 2>/dev/null | tail -n 80 || true
   adb -s "$serial" logcat -d -v threadtime 2>/dev/null | tail -n 250 || true
   echo "::endgroup::"
@@ -52,8 +52,9 @@ actual_sdk="$(adb -s "$serial" shell getprop ro.build.version.sdk | tr -d '\r')"
 
 # Android 8's Toybox does not include getconf. KernelPageSize in
 # /proc/self/smaps is available on both API 26 and modern 16 KB images.
-actual_page_size_kb="$(adb -s "$serial" shell "awk '/^KernelPageSize:/ {print \\$2; exit}' /proc/self/smaps" | tr -d '\r')"
-[[ "$actual_page_size_kb" =~ ^[0-9]+$ ]] || fail "could not read KernelPageSize from /proc/self/smaps: $actual_page_size_kb"
+page_size_line="$(adb -s "$serial" shell "grep -m1 '^KernelPageSize:' /proc/self/smaps" | tr -d '\r')"
+actual_page_size_kb="$(awk '{print $2}' <<< "$page_size_line")"
+[[ "$actual_page_size_kb" =~ ^[0-9]+$ ]] || fail "could not read KernelPageSize from /proc/self/smaps: $page_size_line"
 actual_page_size=$((actual_page_size_kb * 1024))
 [[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected page size $expected_page_size bytes, got $actual_page_size"
 
