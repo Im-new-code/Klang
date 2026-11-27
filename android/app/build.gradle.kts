@@ -88,6 +88,9 @@ android {
 
     packaging {
         jniLibs {
+            // AGP 9 no longer accepts android:extractNativeLibs in the manifest.
+            // Keep native libraries extracted at install time for FFI/libmpv.
+            useLegacyPackaging = true
             pickFirsts.add("**/libc++_shared.so")
             pickFirsts.add("**/libmpv.so")
         }

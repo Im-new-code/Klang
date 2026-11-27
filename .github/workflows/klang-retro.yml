@@ -66,6 +66,11 @@ jobs:
           grep -Fq 'val sdkVersion = 37' android/build.gradle.kts
           grep -Fq 'android.builtInKotlin=false' android/gradle.properties
           grep -Fq 'android.newDsl=false' android/gradle.properties
+          grep -Fq 'useLegacyPackaging = true' android/app/build.gradle.kts
+          if grep -Fq 'android:extractNativeLibs=' android/app/src/main/AndroidManifest.xml; then
+            echo "Do not set android:extractNativeLibs in the manifest with AGP 9."
+            exit 1
+          fi
 
       - name: Resolve Flutter packages
         shell: bash
