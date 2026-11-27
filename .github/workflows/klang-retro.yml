@@ -201,36 +201,9 @@ jobs:
           profile: pixel_2
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
           disable-animations: true
-          script: |
-            set -eu
-            adb wait-for-device
-            booted=""
-            attempt=0
-            while [ "$attempt" -lt 180 ]; do
-              booted="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
-              [ "$booted" = "1" ] && break
-              attempt=$((attempt + 1))
-              sleep 2
-            done
-            [ "$booted" = "1" ]
-            adb install -r ./build/app/outputs/flutter-apk/app-github-release.apk
-            adb logcat -c
-            adb shell am start -n dev.klangretro.player/com.looper.player.MainActivity
-            attempt=0
-            app_pid=""
-            while [ "$attempt" -lt 30 ]; do
-              app_pid="$(adb shell pidof dev.klangretro.player 2>/dev/null | tr -d '\r')"
-              [ -n "$app_pid" ] && break
-              attempt=$((attempt + 1))
-              sleep 1
-            done
-            [ -n "$app_pid" ]
-            sleep 8
-            if adb logcat -d -v brief | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
-              echo "API 26 smoke test detected a fatal app or native-library error."
-              exit 1
-            fi
-            echo "API 26 launched Klang successfully (pid $app_pid)."
+          # Keep the action input single-line; its shell executor otherwise
+          # splits multiline scripts and breaks compound commands like while-loops.
+          script: bash tool/android_emulator_smoke_test.sh 26
 
       - name: Android 17 (API 37.2) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
@@ -249,33 +222,4 @@ jobs:
           disk-size: 8G
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot
           disable-animations: true
-          script: |
-            set -eu
-            adb wait-for-device
-            booted=""
-            attempt=0
-            while [ "$attempt" -lt 180 ]; do
-              booted="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
-              [ "$booted" = "1" ] && break
-              attempt=$((attempt + 1))
-              sleep 2
-            done
-            [ "$booted" = "1" ]
-            adb install -r ./build/app/outputs/flutter-apk/app-github-release.apk
-            adb logcat -c
-            adb shell am start -n dev.klangretro.player/com.looper.player.MainActivity
-            attempt=0
-            app_pid=""
-            while [ "$attempt" -lt 30 ]; do
-              app_pid="$(adb shell pidof dev.klangretro.player 2>/dev/null | tr -d '\r')"
-              [ -n "$app_pid" ] && break
-              attempt=$((attempt + 1))
-              sleep 1
-            done
-            [ -n "$app_pid" ]
-            sleep 8
-            if adb logcat -d -v brief | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal'; then
-              echo "API 37 smoke test detected a fatal app or native-library error."
-              exit 1
-            fi
-            echo "API 37 launched Klang successfully (pid $app_pid)."
+          script: bash tool/android_emulator_smoke_test.sh 37
