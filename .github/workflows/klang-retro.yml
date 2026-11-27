@@ -189,6 +189,26 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Enable KVM for Android emulators
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -e /dev/kvm ]]; then
+            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+            sudo udevadm control --reload-rules
+            sudo udevadm trigger --name-match=kvm
+            # Apply permissions immediately for the already-created device node.
+            sudo chmod 0666 /dev/kvm
+          fi
+
+          if [[ -r /dev/kvm && -w /dev/kvm ]]; then
+            echo "KVM is available to the emulator runner."
+            ls -l /dev/kvm
+          else
+            echo "::warning::KVM is unavailable; the emulator will fall back to TCG software emulation."
+            echo "ANDROID_I_WANT_MY_TCG=yes" >> "$GITHUB_ENV"
+          fi
+
       - name: Android 8.0 (API 26) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
         env:

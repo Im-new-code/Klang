@@ -5,8 +5,8 @@ set -Eeuo pipefail
 
 api_level="${1:-}"
 case "$api_level" in
-  26) expected_sdk=26 ;;
-  37) expected_sdk=37 ;;
+  26) expected_sdk=26; expected_page_size=4096 ;;
+  37) expected_sdk=37; expected_page_size=16384 ;;
   *)
     echo "Usage: $0 {26|37}" >&2
     exit 2
@@ -22,6 +22,7 @@ dump_diagnostics() {
   echo "::group::Emulator diagnostics (API $api_level)"
   adb -s "$serial" devices -l || true
   adb -s "$serial" shell getprop ro.build.version.sdk || true
+  adb -s "$serial" shell getconf PAGE_SIZE || true
   adb -s "$serial" shell dumpsys activity activities 2>/dev/null | tail -n 80 || true
   adb -s "$serial" logcat -d -v threadtime 2>/dev/null | tail -n 250 || true
   echo "::endgroup::"
@@ -48,6 +49,9 @@ done
 
 actual_sdk="$(adb -s "$serial" shell getprop ro.build.version.sdk | tr -d '\r')"
 [[ "$actual_sdk" == "$expected_sdk" ]] || fail "expected Android API $expected_sdk, got API $actual_sdk"
+
+actual_page_size="$(adb -s "$serial" shell getconf PAGE_SIZE | tr -d '\r')"
+[[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected page size $expected_page_size bytes, got $actual_page_size"
 
 adb -s "$serial" install -r "$apk" || fail "APK installation failed"
 # Some API 26 images deny clearing the main log buffer; this is optional.
