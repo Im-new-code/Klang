@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:looper_player/core/utils/motion.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,6 +10,7 @@ import 'package:looper_player/features/library/domain/models/models.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:looper_player/core/theme/app_fonts.dart';
+import 'package:looper_player/core/theme/app_assets.dart';
 import 'package:looper_player/core/utils/app_links.dart';
 import 'package:looper_player/core/providers/providers.dart';
 import 'package:looper_player/core/providers/navigation_provider.dart';
@@ -99,30 +102,23 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                         ? Row(
                             key: const ValueKey('searching_header'),
                             children: [
-                              PremiumSection(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(32),
-                                  bottomLeft: Radius.circular(32),
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                ),
-                                width: 48,
-                                height: 48,
-                                useBlur: useBlur,
-                                useExpanded: false,
-                                forceNoBlur: true,
-                                onTap: () {
+                              GlassIconButton(
+                                icon: const Icon(LucideIcons.arrowLeft),
+                                iconColor: Colors.white,
+                                onPressed: () {
                                   AppHaptics.light();
                                   setState(() {
                                     _isSearching = false;
                                     _searchController.clear();
                                   });
                                 },
-                                child: const Icon(
-                                  LucideIcons.arrowLeft,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                size: 48,
+                                iconSize: 20,
+                                shape: GlassIconButtonShape.roundedSquare,
+                                borderRadius: 16,
+                                useOwnLayer: true,
+                                quality: GlassQuality.standard,
+                                color: Colors.white.withValues(alpha: 0.055),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -189,63 +185,79 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                           )
                         : Row(
                             key: const ValueKey('standard_header'),
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              PremiumSection(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(32),
-                                  bottomLeft: Radius.circular(32),
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                ),
-                                width: 48,
-                                height: 48,
-                                useBlur: useBlur,
-                                forceNoBlur: true,
-                                useExpanded: false,
-                                onTap: () {
+                              GlassIconButton(
+                                icon: const Icon(LucideIcons.arrowLeft),
+                                iconColor: Colors.white,
+                                onPressed: () {
                                   AppHaptics.light();
                                   ref
                                       .read(appNavigationProvider.notifier)
                                       .goBack();
                                 },
-                                child: const Icon(
-                                  LucideIcons.arrowLeft,
-                                  color: Colors.white,
-                                  size: 20,
+                                size: 48,
+                                iconSize: 20,
+                                shape: GlassIconButtonShape.roundedSquare,
+                                borderRadius: 16,
+                                useOwnLayer: true,
+                                quality: GlassQuality.standard,
+                                color: Colors.white.withValues(alpha: 0.055),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: SvgPicture.asset(
+                                        AppAssets.logo,
+                                        width: 34,
+                                        height: 34,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Klang',
+                                          style: AppFonts.jostStyle(
+                                            color: Colors.white,
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        Text(
+                                          l10n.settings,
+                                          style: AppFonts.jostStyle(
+                                            color: Color(settings.accentColor),
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.35,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                l10n.settings,
-                                style: AppFonts.jostStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              PremiumSection(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                  topRight: Radius.circular(32),
-                                  bottomRight: Radius.circular(32),
-                                ),
-                                width: 48,
-                                height: 48,
-                                useExpanded: false,
-                                forceNoBlur: true,
-                                useBlur: useBlur,
-                                onTap: () {
+                              GlassIconButton(
+                                icon: const Icon(LucideIcons.search),
+                                iconColor: Colors.white,
+                                onPressed: () {
                                   AppHaptics.light();
                                   setState(() {
                                     _isSearching = true;
                                   });
                                 },
-                                child: const Icon(
-                                  LucideIcons.search,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                size: 48,
+                                iconSize: 20,
+                                shape: GlassIconButtonShape.roundedSquare,
+                                borderRadius: 16,
+                                useOwnLayer: true,
+                                quality: GlassQuality.standard,
+                                color: Colors.white.withValues(alpha: 0.055),
                               ),
                             ],
                           ),

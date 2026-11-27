@@ -11,86 +11,85 @@ extension _SettingsCategoryGroup on _SettingsViewState {
     required bool useBlur,
     required AppSettings settings,
   }) {
-    return Column(
-      children: [
-        PremiumSection(
-          useBlur: useBlur,
-          forceNoBlur: true,
-          borderRadius: BorderRadius.circular(20),
-          useExpanded: false,
-          padding: EdgeInsets.zero,
-          child: InkWell(
-            onTap: () {
-              AppHaptics.light();
-              if (id == 'support_us') {
-                _showSupportUsDialog(context, colorScheme, useBlur);
-                return;
-              }
-              // Routed through appNavigationProvider (not a raw Navigator
-              // push) so the sub-page is tracked in nav history -- otherwise
-              // the system back button's PopScope handler (which always
-              // resolves through appNavigationProvider.goBack()) has no
-              // record of this level and collapses straight past both this
-              // screen and Settings back to the main tab in one shot.
-              ref
-                  .read(appNavigationProvider.notifier)
-                  .showSettingsCategory(id: id, title: title);
-            },
-            borderRadius: BorderRadius.circular(20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color(
-                        settings.accentColor,
-                      ).withValues(alpha: 0.08),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      icon,
-                      color: Color(settings.accentColor),
-                      size: 20.s,
+    final accent = Color(settings.accentColor);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassContainer.card(
+        surfaceStyle: GlassSurfaceStyle.solid,
+        color: colorScheme.surfaceContainer,
+        shape: const LiquidRoundedSuperellipse(borderRadius: 23),
+        padding: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            AppHaptics.light();
+            if (id == 'support_us') {
+              _showSupportUsDialog(context, colorScheme, useBlur);
+              return;
+            }
+            // Keep settings navigation in the shared history so system back
+            // always returns to this list in the expected order.
+            ref
+                .read(appNavigationProvider.notifier)
+                .showSettingsCategory(id: id, title: title);
+          },
+          borderRadius: BorderRadius.circular(23),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 15, 18, 15),
+            child: Row(
+              children: [
+                Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.11),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: accent.withValues(alpha: 0.16),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: AppFonts.jostStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, color: accent, size: 21),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppFonts.jostStyle(
+                          color: colorScheme.onSurface,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          subtitle,
-                          style: AppFonts.jostStyle(
-                            color: Colors.white.withValues(alpha: 0.4),
-                            fontSize: 12,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: AppFonts.jostStyle(
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.82,
                           ),
+                          fontSize: 12,
+                          height: 1.3,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Icon(
-                    LucideIcons.chevronRight,
-                    color: Colors.white.withValues(alpha: 0.4),
-                    size: 18.s,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  LucideIcons.chevronRight,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  size: 18,
+                ),
+              ],
             ),
           ),
         ),
-        const SizedBox(height: 12),
-      ],
+      ),
     );
   }
 }
