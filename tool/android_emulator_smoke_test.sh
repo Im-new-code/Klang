@@ -53,13 +53,17 @@ done
 actual_sdk="$(adb -s "$serial" shell getprop ro.build.version.sdk | tr -d '\r')"
 [[ "$actual_sdk" == "$expected_sdk" ]] || fail "expected Android API $expected_sdk, got API $actual_sdk"
 
-# Read the page size exposed to applications by the dynamic linker.
-# This matters on x86_64 16 KB emulator images: the host kernel uses 4 KB
-# pages while the emulator presents 16 KB alignment to guest processes.
-page_size_line="$(adb -s "$serial" shell 'LD_SHOW_AUXV=1 /system/bin/ls /' 2>&1 | grep -m1 '^AT_PAGESZ' || true)"
-actual_page_size="$(awk '{print $2}' <<< "$page_size_line")"
-[[ "$actual_page_size" =~ ^[0-9]+$ ]] || fail "could not read AT_PAGESZ from the Android auxiliary vector: $page_size_line"
-[[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected application page size $expected_page_size bytes, got $actual_page_size"
+if [[ "$api_level" == "37" ]]; then
+  # Read the page size exposed to applications by the dynamic linker.
+  # The x86_64 16 KB emulator uses a 4 KB host kernel but exposes 16 KB
+  # application pages, so KernelPageSize in smaps is deliberately not used.
+  page_size_line="$(adb -s "$serial" shell 'LD_SHOW_AUXV=1 /system/bin/ls /' 2>&1 | grep -m1 '^AT_PAGESZ' || true)"
+  actual_page_size="$(awk '{print $2}' <<< "$page_size_line")"
+  [[ "$actual_page_size" =~ ^[0-9]+$ ]] || fail "could not read AT_PAGESZ from the Android auxiliary vector: $page_size_line"
+  [[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected application page size $expected_page_size bytes, got $actual_page_size"
+else
+  echo "API 26 page-size assertion skipped; 16 KB page-size validation is performed on API 37."
+fi
 
 adb -s "$serial" install -r "$apk" || fail "APK installation failed"
 # Some API 26 images deny clearing the main log buffer; this is optional.
