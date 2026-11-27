@@ -158,10 +158,9 @@ class AppSettings {
   bool dynamicLyrics = false;
   bool blurredArtworkForLyrics = true;
   int accentColor = 0xFF8EDCFF; // Klang ice blue
-  bool audioFocus = true;
-  // Unused: audio focus is owned by mpv_audio_kit, which can't honour
-  // these (nor pauseOnDuck / permanentAudioFocusChange below). Kept only
-  // so the Isar schema and existing databases stay unchanged.
+  bool audioFocus = false;
+  // Keep playback active when other apps request audio focus. Phone-call blocking
+  // is checked separately before playback starts or resumes.
   bool audioFocusRequestOnPlay = true;
   bool audioFocusReleaseOnPause = true;
   bool audioFocusStopOnOtherSession = true;

@@ -20,7 +20,7 @@ class AudioService {
   String? _publishedMediaMetadataKey;
   String? _pendingMediaMetadataKey;
   int _mediaMetadataGeneration = 0;
-  InterruptionPolicy _interruptionPolicy = InterruptionPolicy.pauseAndResume;
+  InterruptionPolicy _interruptionPolicy = InterruptionPolicy.keepPlaying;
 
   Timer? _liveEqThrottleTimer;
   List<double>? _throttledGains;
@@ -229,7 +229,7 @@ class AudioService {
   }
 
   Future<void> _initMediaSession({
-    InterruptionPolicy interruptionPolicy = InterruptionPolicy.pauseAndResume,
+    InterruptionPolicy interruptionPolicy = InterruptionPolicy.keepPlaying,
   }) async {
     _interruptionPolicy = interruptionPolicy;
 
@@ -510,7 +510,7 @@ class AudioService {
     List<double>? equalizerGains,
     bool? equalizerEnabled,
     String? customFilter,
-    InterruptionPolicy interruptionPolicy = InterruptionPolicy.pauseAndResume,
+    InterruptionPolicy interruptionPolicy = InterruptionPolicy.keepPlaying,
   }) async {
     LoggerHelper.write(
       'AudioService: play() requested for path: $path, title: ${metadata?['title']}, play: $play',

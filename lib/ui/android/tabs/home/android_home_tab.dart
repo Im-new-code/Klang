@@ -90,7 +90,6 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
       artistSortOptionIndex,
       genreSortOptionIndex,
       disableBlur,
-      enableDynamicTheming,
       homeSectionOrder,
       showHomeArtists,
       showHomeAlbums,
@@ -104,7 +103,6 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
           s.artistSortOptionIndex,
           s.genreSortOptionIndex,
           s.disableBlur,
-          s.enableDynamicTheming,
           s.homeSectionOrder,
           s.showHomeArtists,
           s.showHomeAlbums,
@@ -235,7 +233,7 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
     final allQuickPicks = ref.watch(homeQuickPicksProvider);
     final dateAddedSongs = ref.watch(homeRecentlyAddedProvider);
 
-    final useBlur = enableDynamicTheming && !disableBlur;
+    final useBlur = !disableBlur;
 
     final orderedSlivers = <Widget>[
       SliverToBoxAdapter(

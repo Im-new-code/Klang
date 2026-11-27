@@ -51,8 +51,7 @@ class Settings extends _$Settings {
     bool retryEmbeddedArtwork = false;
     if (settings != null) {
       bool needsSave = false;
-      // One-time migration from inherited Looper/Klang Retro defaults.
-      // Preserve distinct user choices while enabling the new Klang identity.
+      // One-time migration from inherited Looper/Klang Retro defaults to Klang's intended defaults.
       if (!settings.klangBrandDefaultsMigrated) {
         if (!settings.enableDynamicTheming) {
           settings.enableDynamicTheming = true;
@@ -74,6 +73,7 @@ class Settings extends _$Settings {
             settings.selectedAvatarAsset == 'looper_main.svg') {
           settings.selectedAvatarAsset = 'klang_mark.svg';
         }
+        settings.audioFocus = false;
         settings.klangBrandDefaultsMigrated = true;
         // Re-enrich old tracks without artwork, including embedded pictures.
         // LibraryNotifier resumes this after settings initialise.

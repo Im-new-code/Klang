@@ -73,6 +73,15 @@
                 android:resource="@xml/player_widget_info_large_lyrics" />
         </receiver>
 
+        <receiver android:name="com.looper.player.PlayerWidgetProviderLyricsOnly"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/player_widget_info_lyrics_only" />
+        </receiver>
+
         <receiver android:name="com.looper.player.PlayerWidgetProviderBar"
             android:exported="true">
             <intent-filter>

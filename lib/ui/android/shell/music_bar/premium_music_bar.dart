@@ -150,7 +150,7 @@ class _PremiumMusicBarState extends ConsumerState<PremiumMusicBar>
     final song = ref.watch(playbackProvider.select((s) => s.currentSong));
     final isPlaying = ref.watch(playbackProvider.select((s) => s.isPlaying));
     final settings = ref.watch(settingsProvider);
-    final useBlur = settings.enableDynamicTheming;
+    final useBlur = true;
     ref.listen<int>(playerCollapseTriggerProvider, (prev, next) {
       if (settings.enableSlideGesture) {
         _isDragging = false;

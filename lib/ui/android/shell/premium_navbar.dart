@@ -29,7 +29,7 @@ class PremiumNavbar extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final accentColor = Color(settings.accentColor);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final useBlur = settings.enableDynamicTheming;
+    final useBlur = true;
     final l10n = AppLocalizations.of(context)!;
 
     // Landscape phones are short - the portrait-tuned 72dp bar plus its
