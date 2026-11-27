@@ -85,10 +85,41 @@ sleep 10
 app_pid_after="$(adb -s "$serial" shell pidof "$package_name" 2>/dev/null | tr -d '\r' || true)"
 [[ -n "$app_pid_after" ]] || fail "Klang process exited shortly after launch"
 
-fatal_log="$(adb -s "$serial" logcat -d -v brief | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal' || true)"
+# Restrict fatal-error scanning to Klang's own process IDs. Android 17
+# Google API emulator images emit unrelated native crashes and JNI errors
+# from background Google/system services; scanning all of logcat makes those
+# platform issues look like application failures.
+read -r -a app_pids <<< "$app_pid $app_pid_after"
+checked_pids=()
+fatal_log=""
+for pid in "${app_pids[@]}"; do
+  [[ "$pid" =~ ^[0-9]+$ ]] || continue
+
+  case " ${checked_pids[*]} " in
+    *" $pid "*) continue ;;
+  esac
+  checked_pids+=("$pid")
+
+  if ! pid_log="$(adb -s "$serial" logcat -d -v brief --pid="$pid" 2>&1)"; then
+    fail "could not inspect logcat for Klang process PID $pid: $pid_log"
+  fi
+
+  pid_fatal="$(printf '%s\\n' "$pid_log" | grep -E 'FATAL EXCEPTION|UnsatisfiedLinkError|NoClassDefFoundError|Fatal signal' || true)"
+  if [[ -n "$pid_fatal" ]]; then
+    fatal_log+=
+
+echo "API $api_level launched Klang successfully (pid $app_pid_after)."
+\\n'"Klang PID $pid:"
+
+echo "API $api_level launched Klang successfully (pid $app_pid_after)."
+\\n'"$pid_fatal"
+  fi
+done
+
+echo "Checked Klang process logcat for PID(s): ${checked_pids[*]}"
 if [[ -n "$fatal_log" ]]; then
   echo "$fatal_log" >&2
-  fail "fatal Java or native-library error detected"
+  fail "fatal Java or native-library error detected in Klang process"
 fi
 
 echo "API $api_level launched Klang successfully (pid $app_pid_after)."
