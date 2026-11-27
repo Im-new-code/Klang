@@ -22,35 +22,39 @@ extension _MiniPlayerContent on _PremiumMusicBarState {
     final double tintAlpha =
         (0.055 + cardBlurAmount / 100).clamp(0.055, 0.12).toDouble();
 
-    final Widget artwork = buildHero(
-      tag: 'album_art',
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: SizedBox(
-          width: artSize,
-          height: artSize,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              OptimizedImage(
-                imagePath: song.artPath != null &&
-                        !song.artPath!.startsWith('http')
-                    ? song.artPath
-                    : null,
-                imageUrl: song.artPath != null &&
-                        song.artPath!.startsWith('http')
-                    ? song.artPath
-                    : null,
-                fit: BoxFit.cover,
+    final Widget artwork = settings.enableSlideGesture
+        // The fluid player renders album art in its own morph layer.
+        // Keep this slot empty so the expanding transition never duplicates it.
+        ? SizedBox(width: artSize, height: artSize)
+        : buildHero(
+            tag: 'album_art',
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: SizedBox(
+                width: artSize,
+                height: artSize,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    OptimizedImage(
+                      imagePath: song.artPath != null &&
+                              !song.artPath!.startsWith('http')
+                          ? song.artPath
+                          : null,
+                      imageUrl: song.artPath != null &&
+                              song.artPath!.startsWith('http')
+                          ? song.artPath
+                          : null,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned.fill(
+                      child: SongPlaybackOverlay(isPlaying: isPlaying),
+                    ),
+                  ],
+                ),
               ),
-              Positioned.fill(
-                child: SongPlaybackOverlay(isPlaying: isPlaying),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
 
     final Widget trackInfo = Expanded(
       child: Column(
