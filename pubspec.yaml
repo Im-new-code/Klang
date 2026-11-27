@@ -89,7 +89,7 @@ dependency_overrides:
   # together with a metadata_god release built on a newer bridge.
   flutter_rust_bridge: 2.11.1
 
-# Launcher generation intentionally disabled; retain Looper's existing native icon resources.
+# Klang launcher artwork is maintained in the native Android resources.
 
 flutter:
   generate: true

@@ -1,28 +1,29 @@
 # Klang
 
-Klang is a local-first Android music player focused on a fast music library, clear album artwork, smooth playback controls and synchronized lyrics.
+**Your library. Your sound.**
 
-This repository contains the Klang application and its Android build workflows. The Android project supports API 26 and newer and produces universal and ABI-specific APKs.
+Klang is a local-first music player built around the music collection already on your device. It combines a searchable library, artwork-aware playback, synced lyrics and an adaptive liquid-glass interface.
 
-## Current application capabilities
+## What Klang includes
 
-- Browse locally stored music and organize it by songs, albums, artists and genres.
-- Read embedded audio tags and embedded album artwork.
-- Load local LRC lyrics and use supported online lyrics providers.
-- Edit supported song and album metadata.
-- Create playlists, manage the playback queue and restore playback state.
-- Use the built-in equalizer and playback controls.
-- Add Android home-screen playback widgets.
-- Choose accent colors, typography and artwork-aware visual styling.
-- Scan device media and user-selected folders, including supported removable storage locations.
+- Browse music by songs, albums, artists, genres, folders and playlists.
+- Read embedded tags and album artwork, edit supported metadata, and recover missing cover art during library enrichment.
+- Use embedded lyrics, local `.lrc` files and optional online lyrics providers.
+- View synchronized lyrics in the player and in a dedicated lyrics-only Android home-screen widget.
+- Manage playback queues, favourites, listening history, audio effects and equalizer settings.
+- Keep music playing alongside other apps by default, while retaining a separate active-call playback guard.
+- Use responsive liquid-glass navigation and player controls with adaptive rendering quality, plus dark, light and AMOLED themes.
+- Install universal or architecture-specific Android builds for ARM64, ARMv7 and x86_64.
 
-Klang is being reworked with a cool-toned liquid-glass interface and its own visual identity. Some planned items, including a dedicated lyrics-only widget and further audio-mixing controls, are still under development and are not claimed as complete by this README.
+## Android support
 
-## Build
+The Android application targets API 26 and newer. Continuous integration builds the universal and ABI-specific APKs and checks launch behaviour on Android API 26 and API 37 emulator images.
 
-The project uses Flutter, Dart, Kotlin and Gradle. GitHub Actions builds release APKs for ARM64, ARMv7, x86_64 and universal Android distributions, and runs static analysis, tests and Android emulator smoke tests.
+The app has been tested in CI, but actual-device checks are still important. Older GPUs may use a lighter glass renderer automatically to keep navigation responsive.
 
-For local development, run these commands in order:
+## Build from source
+
+Klang uses Flutter, Dart, Kotlin and Gradle. With the Flutter SDK and Android toolchain installed:
 
     flutter pub get
     dart run build_runner build --delete-conflicting-outputs
@@ -30,6 +31,11 @@ For local development, run these commands in order:
     flutter test
     flutter build apk --release --flavor github
 
-## Upstream and license
+GitHub Actions also applies the narrowly scoped Gradle compatibility patch needed by the pinned `metadata_god` dependency.
 
-Klang is based on the open-source Looper Player project by its original authors and contributors. The project retains the upstream GPL-3.0 licensing obligations; upstream work and its authors must continue to receive appropriate credit. Klang-specific branding, product direction and subsequent changes are maintained in this repository.
+## Project identity and credits
+
+Klang has its own product direction, name, visual design and user experience. Parts of the current application code are derived from the open-source Looper Player project. The project retains its GPL-3.0 licensing obligations and the original authors' copyright notices. This attribution is provided as source and legal credit; it does not identify the Klang product.
+
+Klang also uses the MIT-licensed `liquid_glass_widgets` Flutter package by Sebastian Degenaar for adaptive liquid-glass UI components. Third-party package licences and notices are available through the in-app Open Source Licences page.
+

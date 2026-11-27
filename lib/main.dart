@@ -62,7 +62,7 @@ void main(List<String> args) async {
   AppHaptics.init();
   // Warm the glass shaders while database and native audio services initialise.
   // Adaptive quality selects a safe renderer for older Android GPUs.
-  final Future<void> liquidGlassInit = timed('liquidGlass', () async {
+  final Future<void> liquidGlassInit = timed('liquidGlass', (() async {
     try {
       await LiquidGlassWidgets.initialize(
         warmUpMode: GlassWarmUpMode.auto,
@@ -70,7 +70,7 @@ void main(List<String> args) async {
     } catch (error, stack) {
       debugPrint('Klang glass initialisation fallback: $error\\n$stack');
     }
-  });
+  })());
 
   // Capture unhandled Flutter framework errors
   FlutterError.onError = (FlutterErrorDetails details) {

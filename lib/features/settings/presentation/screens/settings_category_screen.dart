@@ -19,6 +19,7 @@ import '../widgets/tiles/playback_settings_tiles.dart';
 import '../widgets/tiles/audio_playback_settings_tiles.dart';
 import '../widgets/tiles/library_settings_tiles.dart';
 import '../widgets/tiles/about_settings_tiles.dart';
+import 'klang_about_screen.dart';
 import '../widgets/tiles/backup_logs_settings_tiles.dart';
 import 'package:looper_player/core/theme/app_assets.dart';
 import 'package:looper_player/core/services/haptics/app_haptics.dart';
@@ -35,6 +36,7 @@ class SettingsCategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (categoryId == 'about') return const KlangAboutScreen();
     final settings = ref.watch(settingsProvider);
     final l10n = AppLocalizations.of(context)!;
     final useBlur = settings.enableDynamicTheming && !settings.disableBlur;
@@ -234,7 +236,7 @@ class SettingsCategoryScreen extends ConsumerWidget {
       ];
     } else if (categoryId == 'about') {
       children = [
-        const LooperVersionTile(), //1
+        const KlangVersionTile(), //1
         const Divider(height: 1, indent: 72, color: Colors.white10), //2
         Padding(
           //3

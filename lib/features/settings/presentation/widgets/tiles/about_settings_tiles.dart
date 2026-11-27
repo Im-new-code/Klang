@@ -19,8 +19,8 @@ import 'package:looper_player/core/services/update/apk_update_notifier.dart';
 import 'package:looper_player/ui/widgets/sheets/apk_update_sheet.dart';
 import 'package:looper_player/features/settings/presentation/widgets/lyrics_services_sheet.dart';
 
-class LooperVersionTile extends ConsumerWidget {
-  const LooperVersionTile({super.key});
+class KlangVersionTile extends ConsumerWidget {
+  const KlangVersionTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
