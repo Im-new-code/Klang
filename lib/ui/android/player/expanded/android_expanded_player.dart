@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:looper_player/core/utils/song_metadata.dart';
 
 import 'package:flutter/material.dart' hide RepeatMode;
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:looper_player/core/theme/app_fonts.dart';
@@ -722,124 +723,129 @@ class _AndroidExpandedPlayerState extends ConsumerState<AndroidExpandedPlayer>
       required double height,
       required double horizontalPadding,
     }) {
+      final double buttonSize = height.clamp(56.0, 72.0).toDouble();
+      final double playSize = buttonSize + 10.0;
+      final Color accent = Theme.of(context).colorScheme.primary;
+
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-        child: Row(
-          children: [
-            // Previous
-            PremiumSection(
-              heroTag: 'player_prev_btn',
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(40),
-                bottomLeft: Radius.circular(40),
-                topRight: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-              ),
-              height: height,
-              showShadow: false,
-              useBlur: useBlur,
-              forceNoBlur: true,
-              backgroundColor: Colors.white.withOpacity(0.04),
-              showBorder: false,
-              instantPressFeedback: true,
-              onTap: () {
-                AppHaptics.light();
-                _prevTapPulse.value++;
-                _afterThisFrame(
-                  () => ref.read(playbackProvider.notifier).skipPrevious(),
-                );
-              },
-              child: ValueListenableBuilder<int>(
-                valueListenable: _prevTapPulse,
-                builder: (context, tick, child) {
-                  return AnimatedTransportIcon(
-                    asset: AppIcons.prev,
-                    color: Colors.white,
-                    size: AppIcons.expandedPlayerMainControl.s,
-                    triggerKey: tick,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 6),
-            // Play/Pause
-            Consumer(
-              builder: (context, ref, child) {
-                final isPlaying = ref.watch(
-                  playbackProvider.select((s) => s.isPlaying),
-                );
-                return PremiumSection(
-                  heroTag: 'player_play_pause_btn',
-                  borderRadius: BorderRadius.circular(12),
-                  height: height,
-                  showShadow: false,
-                  useBlur: useBlur,
-                  showBorder: false,
-
-                  forceNoBlur: true,
-                  animate: true,
-                  backgroundColor: isPlaying
-                      ? Colors.white.withOpacity(0.04)
-                      : Theme.of(context).colorScheme.primary,
-                  instantPressFeedback: true,
-                  onTap: () {
-                    AppHaptics.medium();
-                    ref.read(playbackProvider.notifier).togglePlay();
-                  },
-                  // A constant 1.1 (the AnimatedScale this replaced never
-                  // animated - its target never changed).
-                  child: Transform.scale(
-                    scale: 1.1,
-                    child: AnimatedPlayPauseIcon(
-                      isPlaying: isPlaying,
-                      color: isPlaying
-                          ? Colors.white
-                          : HSLColor.fromColor(
-                              Theme.of(context).colorScheme.primary,
-                            ).withLightness(0.15).toColor(),
-                      size: AppIcons.expandedPlayerPlayPauseIcon.s,
+        child: Center(
+          child: AdaptiveLiquidGlassLayer(
+            quality: GlassQuality.standard,
+            shape: const LiquidRoundedSuperellipse(borderRadius: 48),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildHero(
+                    tag: 'player_prev_btn',
+                    child: GlassButton.custom(
+                      label: l10n.previousLabel,
+                      width: buttonSize,
+                      height: buttonSize,
+                      shape: const LiquidOval(),
+                      quality: GlassQuality.standard,
+                      color: Colors.white.withValues(alpha: 0.045),
+                      stretch: 0.08,
+                      interactionScale: 0.95,
+                      glowOpacity: 0.16,
+                      onTap: () {
+                        AppHaptics.light();
+                        _prevTapPulse.value++;
+                        _afterThisFrame(
+                          () => ref.read(playbackProvider.notifier).skipPrevious(),
+                        );
+                      },
+                      child: ValueListenableBuilder<int>(
+                        valueListenable: _prevTapPulse,
+                        builder: (context, tick, child) {
+                          return AnimatedTransportIcon(
+                            asset: AppIcons.prev,
+                            color: Colors.white,
+                            size: AppIcons.expandedPlayerMainControl.s,
+                            triggerKey: tick,
+                          );
+                        },
+                      ),
                     ),
                   ),
-                );
-              },
-            ),
-            const SizedBox(width: 6),
-            // Next
-            PremiumSection(
-              heroTag: 'player_next_btn',
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-                topRight: Radius.circular(40),
-                bottomRight: Radius.circular(40),
+                  const SizedBox(width: 10),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final isPlaying = ref.watch(
+                        playbackProvider.select((s) => s.isPlaying),
+                      );
+                      return buildHero(
+                        tag: 'player_play_pause_btn',
+                        child: GlassButton.custom(
+                          label: isPlaying ? l10n.pause : l10n.play,
+                          width: playSize,
+                          height: playSize,
+                          shape: const LiquidOval(),
+                          quality: GlassQuality.standard,
+                          color: isPlaying
+                              ? Colors.white.withValues(alpha: 0.075)
+                              : accent.withValues(alpha: 0.72),
+                          glowColor: accent.withValues(alpha: 0.3),
+                          glowOpacity: 0.3,
+                          stretch: 0.08,
+                          interactionScale: 0.94,
+                          onTap: () {
+                            AppHaptics.medium();
+                            ref.read(playbackProvider.notifier).togglePlay();
+                          },
+                          child: AnimatedPlayPauseIcon(
+                            isPlaying: isPlaying,
+                            color: isPlaying
+                                ? Colors.white
+                                : HSLColor.fromColor(accent)
+                                    .withLightness(0.15)
+                                    .toColor(),
+                            size: AppIcons.expandedPlayerPlayPauseIcon.s,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  buildHero(
+                    tag: 'player_next_btn',
+                    child: GlassButton.custom(
+                      label: l10n.nextLabel,
+                      width: buttonSize,
+                      height: buttonSize,
+                      shape: const LiquidOval(),
+                      quality: GlassQuality.standard,
+                      color: Colors.white.withValues(alpha: 0.045),
+                      stretch: 0.08,
+                      interactionScale: 0.95,
+                      glowOpacity: 0.16,
+                      onTap: () {
+                        AppHaptics.light();
+                        _nextTapPulse.value++;
+                        _afterThisFrame(
+                          () => ref.read(playbackProvider.notifier).skipNext(),
+                        );
+                      },
+                      child: ValueListenableBuilder<int>(
+                        valueListenable: _nextTapPulse,
+                        builder: (context, tick, child) {
+                          return AnimatedTransportIcon(
+                            asset: AppIcons.next,
+                            color: Colors.white,
+                            size: AppIcons.expandedPlayerMainControl.s,
+                            triggerKey: tick,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              height: height,
-              useBlur: useBlur,
-              backgroundColor: Colors.white.withOpacity(0.04),
-              showShadow: false,
-              forceNoBlur: true,
-              showBorder: false,
-              instantPressFeedback: true,
-              onTap: () {
-                AppHaptics.light();
-                _nextTapPulse.value++;
-                _afterThisFrame(
-                  () => ref.read(playbackProvider.notifier).skipNext(),
-                );
-              },
-              child: ValueListenableBuilder<int>(
-                valueListenable: _nextTapPulse,
-                builder: (context, tick, child) {
-                  return AnimatedTransportIcon(
-                    asset: AppIcons.next,
-                    color: Colors.white,
-                    size: AppIcons.expandedPlayerMainControl.s,
-                    triggerKey: tick,
-                  );
-                },
-              ),
             ),
-          ],
+          ),
         ),
       );
     }
