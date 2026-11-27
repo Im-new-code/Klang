@@ -20,7 +20,7 @@ extension _MiniPlayerContent on _PremiumMusicBarState {
     final double artistFontSize = compact ? 11.0 : 12.5;
     final bool glassEnabled = useBlur && !settings.disableBlur;
     final double tintAlpha =
-        (0.055 + cardBlurAmount / 100).clamp(0.055, 0.12);
+        (0.055 + cardBlurAmount / 100).clamp(0.055, 0.12).toDouble();
 
     final Widget artwork = buildHero(
       tag: 'album_art',
