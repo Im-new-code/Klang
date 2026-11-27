@@ -40,7 +40,7 @@ final class SettingsProvider extends $NotifierProvider<Settings, AppSettings> {
   }
 }
 
-String _$settingsHash() => r'b120b77c19f8e2e84dfcc83fe97c362c37d168c8';
+String _$settingsHash() => r'4e05d28f6fee93b711d4c5fa0663dfb2dbb76555';
 
 abstract class _$Settings extends $Notifier<AppSettings> {
   AppSettings build();
