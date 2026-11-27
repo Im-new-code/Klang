@@ -22,7 +22,10 @@ dump_diagnostics() {
   echo "::group::Emulator diagnostics (API $api_level)"
   adb -s "$serial" devices -l || true
   adb -s "$serial" shell getprop ro.build.version.sdk || true
-  adb -s "$serial" shell "grep -m1 '^KernelPageSize:' /proc/self/smaps" || true
+  adb -s "$serial" shell 'LD_SHOW_AUXV=1 /system/bin/ls /' 2>&1 | grep -m1 '^AT_PAGESZ' || true
+  adb -s "$serial" shell getprop ro.boot.hardware.cpu.pagesize || true
+  adb -s "$serial" shell getprop ro.product.page_size || true
+  adb -s "$serial" shell getprop ro.product.cpu.pagesize.max || true
   adb -s "$serial" shell dumpsys activity activities 2>/dev/null | tail -n 80 || true
   adb -s "$serial" logcat -d -v threadtime 2>/dev/null | tail -n 250 || true
   echo "::endgroup::"
@@ -50,13 +53,13 @@ done
 actual_sdk="$(adb -s "$serial" shell getprop ro.build.version.sdk | tr -d '\r')"
 [[ "$actual_sdk" == "$expected_sdk" ]] || fail "expected Android API $expected_sdk, got API $actual_sdk"
 
-# Android 8's Toybox does not include getconf. KernelPageSize in
-# /proc/self/smaps is available on both API 26 and modern 16 KB images.
-page_size_line="$(adb -s "$serial" shell "grep -m1 '^KernelPageSize:' /proc/self/smaps" | tr -d '\r')"
-actual_page_size_kb="$(awk '{print $2}' <<< "$page_size_line")"
-[[ "$actual_page_size_kb" =~ ^[0-9]+$ ]] || fail "could not read KernelPageSize from /proc/self/smaps: $page_size_line"
-actual_page_size=$((actual_page_size_kb * 1024))
-[[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected page size $expected_page_size bytes, got $actual_page_size"
+# Read the page size exposed to applications by the dynamic linker.
+# This matters on x86_64 16 KB emulator images: the host kernel uses 4 KB
+# pages while the emulator presents 16 KB alignment to guest processes.
+page_size_line="$(adb -s "$serial" shell 'LD_SHOW_AUXV=1 /system/bin/ls /' 2>&1 | grep -m1 '^AT_PAGESZ' || true)"
+actual_page_size="$(awk '{print $2}' <<< "$page_size_line")"
+[[ "$actual_page_size" =~ ^[0-9]+$ ]] || fail "could not read AT_PAGESZ from the Android auxiliary vector: $page_size_line"
+[[ "$actual_page_size" == "$expected_page_size" ]] || fail "expected application page size $expected_page_size bytes, got $actual_page_size"
 
 adb -s "$serial" install -r "$apk" || fail "APK installation failed"
 # Some API 26 images deny clearing the main log buffer; this is optional.

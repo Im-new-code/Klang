@@ -178,6 +178,12 @@ jobs:
           verify_lib "$arm64" "arm64-v8a"
           verify_lib "$x64" "x86_64"
 
+          zipalign_bin="$(find "$sdk_root/build-tools" -type f -name zipalign -print | sort -V | tail -n 1)"
+          test -x "$zipalign_bin"
+          for apk in "$universal" "$arm32" "$arm64" "$x64"; do
+            "$zipalign_bin" -c -P 16 -v 4 "$apk"
+          done
+
           # Every 64-bit shared object must support 16 KB Android page sizes.
           readelf_bin="$(command -v llvm-readelf || command -v readelf)"
           python3 tool/verify_apk_elf_alignment.py --readelf "$readelf_bin" "$universal" "$arm64" "$x64"
