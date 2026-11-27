@@ -50,7 +50,10 @@ actual_sdk="$(adb -s "$serial" shell getprop ro.build.version.sdk | tr -d '\r')"
 [[ "$actual_sdk" == "$expected_sdk" ]] || fail "expected Android API $expected_sdk, got API $actual_sdk"
 
 adb -s "$serial" install -r "$apk" || fail "APK installation failed"
-adb -s "$serial" logcat -c
+# Some API 26 images deny clearing the main log buffer; this is optional.
+if ! adb -s "$serial" logcat -c; then
+  echo "Warning: API $api_level log buffers could not be cleared; continuing with launch checks."
+fi
 adb -s "$serial" shell am force-stop "$package_name" || true
 adb -s "$serial" shell am start -W -n "$package_name/$activity_name" || fail "activity launch failed"
 
