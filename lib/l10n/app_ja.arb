@@ -989,5 +989,20 @@
   "noResultsFor": "「{query}」の検索結果はありません",
   "searchTryDifferent": "入力内容を確認するか、別の言葉でお試しください。",
   "searchScopeHint": "タイトル、アーティスト、アルバム、歌詞、プレイリスト、ジャンル",
-  "selectedCount": "{count}件を選択中"
+  "selectedCount": "{count}件を選択中",
+  "klangAboutTagline": "あなたのライブラリ。あなたのサウンド。",
+  "klangAboutIntro": "すでにお持ちの音楽コレクションを中心に設計されたローカル音楽プレーヤーです。",
+  "klangAboutFeaturesSection": "あなたの音楽のために",
+  "klangAboutProjectSection": "KLANG プロジェクト",
+  "klangAboutLegalSection": "クレジットとライセンス",
+  "klangAboutLibraryTitle": "コレクションを整理",
+  "klangAboutLibraryDesc": "端末に保存された曲、アルバム、アーティスト、プレイリスト、フォルダーを閲覧できます。",
+  "klangAboutLyricsTitle": "曲に合わせて流れる歌詞",
+  "klangAboutLyricsDesc": "埋め込み歌詞やローカル LRC ファイルを読み込めます。オンラインサービスを有効にすれば同期歌詞も検索できます。",
+  "klangAboutPlaybackTitle": "自分好みに調整できる再生",
+  "klangAboutPlaybackDesc": "イコライザー、再生キュー、滑らかなトランジションでサウンドを調整できます。",
+  "klangAboutGlassTitle": "端末に合わせて変わるインターフェース",
+  "klangAboutGlassDesc": "Liquid Glass ナビゲーションは端末の性能に合わせて描画品質を調整し、重い効果を常に強制しません。",
+  "klangAboutLegalDesc": "Klang は独自の製品方針とインターフェースを持っています。アプリのコードの一部は GPL-3.0 ライセンスの Looper Player プロジェクトに由来します。ライセンスに従い、原著作者と著作権表示を引き続き明記しています。",
+  "klangAboutFooter": "大切にしている音楽のために"
 }

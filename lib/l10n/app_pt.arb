@@ -989,5 +989,20 @@
   "noResultsFor": "Nenhum resultado para “{query}”",
   "searchTryDifferent": "Verifique a ortografia ou tente outra palavra.",
   "searchScopeHint": "Títulos, artistas, álbuns, letras, playlists e gêneros",
-  "selectedCount": "{count} selecionadas"
+  "selectedCount": "{count} selecionadas",
+  "klangAboutTagline": "Sua biblioteca. Seu som.",
+  "klangAboutIntro": "Um reprodutor de música local criado em torno da coleção que você já possui.",
+  "klangAboutFeaturesSection": "FEITO PARA SUA MÚSICA",
+  "klangAboutProjectSection": "O PROJETO KLANG",
+  "klangAboutLegalSection": "CRÉDITOS E LICENÇAS",
+  "klangAboutLibraryTitle": "Sua coleção, organizada",
+  "klangAboutLibraryDesc": "Navegue por faixas, álbuns, artistas, playlists e pastas salvos no seu dispositivo.",
+  "klangAboutLyricsTitle": "Letras que acompanham a música",
+  "klangAboutLyricsDesc": "Leia letras incorporadas, use arquivos LRC locais ou procure letras sincronizadas quando os serviços online estiverem ativados.",
+  "klangAboutPlaybackTitle": "Reprodução do seu jeito",
+  "klangAboutPlaybackDesc": "Modele seu som com equalizador, controles da fila e transições suaves.",
+  "klangAboutGlassTitle": "Uma interface que se adapta",
+  "klangAboutGlassDesc": "A navegação Liquid Glass ajusta a qualidade de renderização ao dispositivo, sem forçar os efeitos mais pesados em todos os lugares.",
+  "klangAboutLegalDesc": "Klang tem direção de produto e interface próprias. Parte do código do aplicativo deriva do projeto Looper Player, licenciado sob GPL-3.0. Os autores originais e os avisos de direitos autorais permanecem reconhecidos conforme a licença.",
+  "klangAboutFooter": "FEITO PARA A MÚSICA QUE VOCÊ GUARDA"
 }

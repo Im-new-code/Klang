@@ -527,7 +527,7 @@ extension _SettingsSearch on _SettingsViewState {
             .versionLabel(ref.watch(appVersionProvider).value ?? '')
             .trim(),
         category: l10n.aboutAndMaintainers,
-        widget: const LooperVersionTile(),
+        widget: const KlangVersionTile(),
       ),
       if (ApkInstaller.supported)
         SettingsSearchItem(

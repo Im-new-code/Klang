@@ -989,5 +989,20 @@
   "noResultsFor": "“{query}”에 대한 결과가 없습니다",
   "searchTryDifferent": "철자를 확인하거나 다른 단어로 검색해 보세요.",
   "searchScopeHint": "제목, 아티스트, 앨범, 가사, 재생목록, 장르",
-  "selectedCount": "{count}개 선택됨"
+  "selectedCount": "{count}개 선택됨",
+  "klangAboutTagline": "나의 라이브러리. 나의 사운드.",
+  "klangAboutIntro": "이미 소유한 음악 컬렉션을 중심으로 설계된 로컬 음악 플레이어입니다.",
+  "klangAboutFeaturesSection": "음악을 위해 만들었습니다",
+  "klangAboutProjectSection": "KLANG 프로젝트",
+  "klangAboutLegalSection": "크레딧 및 라이선스",
+  "klangAboutLibraryTitle": "정리된 나의 컬렉션",
+  "klangAboutLibraryDesc": "기기에 저장된 곡, 앨범, 아티스트, 재생목록 및 폴더를 둘러보세요.",
+  "klangAboutLyricsTitle": "음악에 맞춰 움직이는 가사",
+  "klangAboutLyricsDesc": "내장 가사를 읽고 로컬 LRC 파일을 사용하거나 온라인 서비스를 켜면 동기화된 가사를 검색할 수 있습니다.",
+  "klangAboutPlaybackTitle": "원하는 대로 조정하는 재생",
+  "klangAboutPlaybackDesc": "이퀄라이저, 재생 대기열 및 부드러운 전환으로 사운드를 조정하세요.",
+  "klangAboutGlassTitle": "기기에 맞춰 적응하는 인터페이스",
+  "klangAboutGlassDesc": "Liquid Glass 탐색은 기기 성능에 맞춰 렌더링 품질을 조정하며 무거운 효과를 모든 곳에 강제로 적용하지 않습니다.",
+  "klangAboutLegalDesc": "Klang은 독자적인 제품 방향과 인터페이스를 갖고 있습니다. 앱 코드 일부는 GPL-3.0 라이선스의 Looper Player 프로젝트에서 파생되었습니다. 라이선스에 따라 원저작자와 저작권 고지를 계속 표시합니다.",
+  "klangAboutFooter": "간직하는 음악을 위해"
 }

@@ -1396,5 +1396,20 @@
         "type": "int"
       }
     }
-  }
+  },
+  "klangAboutTagline": "Your library. Your sound.",
+  "klangAboutIntro": "A local-first music player built around the collection you already own.",
+  "klangAboutFeaturesSection": "MADE FOR YOUR MUSIC",
+  "klangAboutProjectSection": "THE KLANG PROJECT",
+  "klangAboutLegalSection": "CREDITS & LEGAL",
+  "klangAboutLibraryTitle": "Your collection, organised",
+  "klangAboutLibraryDesc": "Browse tracks, albums, artists, playlists and folders stored on your device.",
+  "klangAboutLyricsTitle": "Lyrics that keep time",
+  "klangAboutLyricsDesc": "Read embedded lyrics, use local LRC files, or look up synced lyrics when online services are enabled.",
+  "klangAboutPlaybackTitle": "Playback with room to tune",
+  "klangAboutPlaybackDesc": "Shape your sound with the equalizer, queue controls and smooth playback transitions.",
+  "klangAboutGlassTitle": "An interface that adapts",
+  "klangAboutGlassDesc": "Liquid-glass navigation adjusts its rendering quality to the device instead of forcing the heaviest effects everywhere.",
+  "klangAboutLegalDesc": "Klang has its own product direction and interface. Some application code is derived from the GPL-3.0 Looper Player project. The original authors and copyright notices remain credited under the applicable licence.",
+  "klangAboutFooter": "MADE FOR THE MUSIC YOU KEEP"
 }

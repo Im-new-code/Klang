@@ -989,5 +989,20 @@
   "noResultsFor": "未找到“{query}”的相关结果",
   "searchTryDifferent": "请检查拼写或换一个词试试。",
   "searchScopeHint": "标题、艺人、专辑、歌词、播放列表和流派",
-  "selectedCount": "已选择 {count} 项"
+  "selectedCount": "已选择 {count} 项",
+  "klangAboutTagline": "你的音乐库，你的声音。",
+  "klangAboutIntro": "围绕你已有的本地音乐收藏打造的音乐播放器。",
+  "klangAboutFeaturesSection": "为你的音乐而造",
+  "klangAboutProjectSection": "KLANG 项目",
+  "klangAboutLegalSection": "致谢与许可",
+  "klangAboutLibraryTitle": "井然有序的音乐收藏",
+  "klangAboutLibraryDesc": "浏览设备中保存的曲目、专辑、艺人、播放列表和文件夹。",
+  "klangAboutLyricsTitle": "跟随节奏的歌词",
+  "klangAboutLyricsDesc": "阅读内嵌歌词、使用本地 LRC 文件，或在启用在线服务后查找同步歌词。",
+  "klangAboutPlaybackTitle": "按你的喜好播放",
+  "klangAboutPlaybackDesc": "通过均衡器、播放队列控制和流畅的曲目过渡塑造你的声音。",
+  "klangAboutGlassTitle": "能够适应设备的界面",
+  "klangAboutGlassDesc": "Liquid Glass 导航会根据设备性能调整渲染质量，而不是在所有地方强制使用最耗资源的效果。",
+  "klangAboutLegalDesc": "Klang 拥有独立的产品方向和界面。部分应用代码源自采用 GPL-3.0 许可证的 Looper Player 项目。我们会依照许可证保留原作者署名和版权声明。",
+  "klangAboutFooter": "为你珍藏的音乐而造"
 }

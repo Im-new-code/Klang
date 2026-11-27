@@ -118,7 +118,7 @@ class KlangAboutScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Your library. Your sound.',
+                              l10n.klangAboutTagline,
                               style: AppFonts.jostStyle(
                                 color: _accent,
                                 fontSize: 17,
@@ -127,7 +127,7 @@ class KlangAboutScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'A local-first music player built around the collection you already own.',
+                              l10n.klangAboutIntro,
                               style: AppFonts.jostStyle(
                                 color: Colors.white.withValues(alpha: 0.76),
                                 fontSize: 14,
@@ -138,7 +138,7 @@ class KlangAboutScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      const _AboutSectionLabel('MADE FOR YOUR MUSIC'),
+                      _AboutSectionLabel(l10n.klangAboutFeaturesSection),
                       const SizedBox(height: 12),
                       Text(
                         l10n.corePurposeDesc,
@@ -154,40 +154,36 @@ class KlangAboutScreen extends ConsumerWidget {
                         color: _card,
                         shape: const LiquidRoundedSuperellipse(borderRadius: 24),
                         padding: const EdgeInsets.fromLTRB(18, 6, 18, 6),
-                        child: const Column(
+                        child: Column(
                           children: [
                             _AboutFeature(
                               icon: Icons.library_music_rounded,
-                              title: 'Your collection, organised',
-                              description:
-                                  'Browse tracks, albums, artists, playlists and folders stored on your device.',
+                              title: l10n.klangAboutLibraryTitle,
+                              description: l10n.klangAboutLibraryDesc,
                             ),
                             _AboutDivider(),
                             _AboutFeature(
                               icon: Icons.lyrics_rounded,
-                              title: 'Lyrics that keep time',
-                              description:
-                                  'Read embedded lyrics, use local LRC files, or look up synced lyrics when online services are enabled.',
+                              title: l10n.klangAboutLyricsTitle,
+                              description: l10n.klangAboutLyricsDesc,
                             ),
                             _AboutDivider(),
                             _AboutFeature(
                               icon: Icons.tune_rounded,
-                              title: 'Playback with room to tune',
-                              description:
-                                  'Shape your sound with the equalizer, queue controls and smooth playback transitions.',
+                              title: l10n.klangAboutPlaybackTitle,
+                              description: l10n.klangAboutPlaybackDesc,
                             ),
                             _AboutDivider(),
                             _AboutFeature(
                               icon: Icons.blur_on_rounded,
-                              title: 'An interface that adapts',
-                              description:
-                                  'Liquid-glass navigation adjusts its rendering quality to the device instead of forcing the heaviest effects everywhere.',
+                              title: l10n.klangAboutGlassTitle,
+                              description: l10n.klangAboutGlassDesc,
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 30),
-                      const _AboutSectionLabel('THE KLANG PROJECT'),
+                      _AboutSectionLabel(l10n.klangAboutProjectSection),
                       const SizedBox(height: 12),
                       GlassContainer.card(
                         surfaceStyle: GlassSurfaceStyle.solid,
@@ -207,10 +203,10 @@ class KlangAboutScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 26),
-                      const _AboutSectionLabel('CREDITS & LEGAL'),
+                      _AboutSectionLabel(l10n.klangAboutLegalSection),
                       const SizedBox(height: 10),
                       Text(
-                        'Klang has its own product direction and interface. Some application code is derived from the GPL-3.0 Looper Player project. The original authors and copyright notices remain credited under the applicable licence.',
+                        l10n.klangAboutLegalDesc,
                         style: AppFonts.jostStyle(
                           color: Colors.white.withValues(alpha: 0.5),
                           fontSize: 12,
@@ -220,7 +216,7 @@ class KlangAboutScreen extends ConsumerWidget {
                       const SizedBox(height: 20),
                       Center(
                         child: Text(
-                          'MADE FOR THE MUSIC YOU KEEP',
+                          l10n.klangAboutFooter,
                           style: AppFonts.jostStyle(
                             color: Colors.white.withValues(alpha: 0.28),
                             fontSize: 10,

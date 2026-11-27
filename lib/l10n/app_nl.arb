@@ -989,5 +989,20 @@
   "noResultsFor": "Geen resultaten voor “{query}”",
   "searchTryDifferent": "Controleer de spelling of probeer een ander woord.",
   "searchScopeHint": "Titels, artiesten, albums, songteksten, afspeellijsten en genres",
-  "selectedCount": "{count} geselecteerd"
+  "selectedCount": "{count} geselecteerd",
+  "klangAboutTagline": "Jouw bibliotheek. Jouw geluid.",
+  "klangAboutIntro": "Een lokale muziekspeler die is gebouwd rond de muziekcollectie die je al bezit.",
+  "klangAboutFeaturesSection": "GEMAAKT VOOR JOUW MUZIEK",
+  "klangAboutProjectSection": "HET KLANG-PROJECT",
+  "klangAboutLegalSection": "CREDITS EN LICENTIES",
+  "klangAboutLibraryTitle": "Je collectie, overzichtelijk",
+  "klangAboutLibraryDesc": "Blader door nummers, albums, artiesten, afspeellijsten en mappen op je apparaat.",
+  "klangAboutLyricsTitle": "Songteksten op het ritme",
+  "klangAboutLyricsDesc": "Lees ingebedde songteksten, gebruik lokale LRC-bestanden of zoek gesynchroniseerde teksten wanneer onlinediensten zijn ingeschakeld.",
+  "klangAboutPlaybackTitle": "Afspelen op jouw manier",
+  "klangAboutPlaybackDesc": "Vorm je geluid met de equalizer, wachtrijbediening en vloeiende overgangen.",
+  "klangAboutGlassTitle": "Een interface die zich aanpast",
+  "klangAboutGlassDesc": "Liquid Glass-navigatie past de weergavekwaliteit aan het apparaat aan en dwingt niet overal de zwaarste effecten af.",
+  "klangAboutLegalDesc": "Klang heeft een eigen productrichting en interface. Een deel van de applicatiecode is afgeleid van het GPL-3.0-project Looper Player. De oorspronkelijke auteurs en auteursrechtvermeldingen blijven behouden volgens de licentie.",
+  "klangAboutFooter": "GEBOUWD VOOR DE MUZIEK DIE JE BEWAART"
 }

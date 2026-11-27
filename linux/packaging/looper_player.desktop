@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
-Name=Looper Player
+Name=Klang
 GenericName=Music Player
-Comment=A powerful music player.
+Comment=Your library. Your sound.
 Exec=looper_player %U
 Terminal=false
 Type=Application

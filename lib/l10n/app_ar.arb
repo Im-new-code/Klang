@@ -989,5 +989,20 @@
   "noResultsFor": "لا توجد نتائج لـ «{query}»",
   "searchTryDifferent": "تحقق من الإملاء أو جرّب كلمة أخرى.",
   "searchScopeHint": "العناوين والفنانون والألبومات والكلمات وقوائم التشغيل والأنواع",
-  "selectedCount": "تم تحديد {count}"
+  "selectedCount": "تم تحديد {count}",
+  "klangAboutTagline": "مكتبتك. صوتك.",
+  "klangAboutIntro": "مشغل موسيقى محلي صُمم حول المجموعة الموسيقية التي تملكها بالفعل.",
+  "klangAboutFeaturesSection": "مصمم لموسيقاك",
+  "klangAboutProjectSection": "مشروع Klang",
+  "klangAboutLegalSection": "الاعتمادات والتراخيص",
+  "klangAboutLibraryTitle": "مجموعتك، منظمة",
+  "klangAboutLibraryDesc": "تصفح المقاطع والألبومات والفنانين وقوائم التشغيل والمجلدات المخزنة على جهازك.",
+  "klangAboutLyricsTitle": "كلمات تواكب الإيقاع",
+  "klangAboutLyricsDesc": "اقرأ الكلمات المضمنة، أو استخدم ملفات LRC المحلية، أو ابحث عن كلمات متزامنة عند تفعيل الخدمات عبر الإنترنت.",
+  "klangAboutPlaybackTitle": "تشغيل حسب ذوقك",
+  "klangAboutPlaybackDesc": "شكّل صوتك باستخدام المعادل والتحكم في قائمة الانتظار وانتقالات التشغيل السلسة.",
+  "klangAboutGlassTitle": "واجهة تتكيف مع جهازك",
+  "klangAboutGlassDesc": "تضبط واجهة Liquid Glass جودة العرض حسب إمكانات الجهاز بدلاً من فرض التأثيرات الأثقل في كل مكان.",
+  "klangAboutLegalDesc": "لدى Klang توجهه وتصميمه الخاصان. بعض شفرة التطبيق مشتقة من مشروع Looper Player المرخص بموجب GPL-3.0. ويظل المؤلفون الأصليون وإشعارات حقوق النشر محفوظين وفقاً للرخصة.",
+  "klangAboutFooter": "صُنع للموسيقى التي تحتفظ بها"
 }

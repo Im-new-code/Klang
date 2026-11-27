@@ -989,5 +989,20 @@
   "noResultsFor": "“{query}” için sonuç yok",
   "searchTryDifferent": "Yazımı kontrol edin veya başka bir kelime deneyin.",
   "searchScopeHint": "Başlıklar, sanatçılar, albümler, sözler, çalma listeleri ve türler",
-  "selectedCount": "{count} seçildi"
+  "selectedCount": "{count} seçildi",
+  "klangAboutTagline": "Kütüphanen. Sesin.",
+  "klangAboutIntro": "Sahip olduğun müzik koleksiyonunu merkeze alan yerel bir müzik çalar.",
+  "klangAboutFeaturesSection": "MÜZİĞİN İÇİN TASARLANDI",
+  "klangAboutProjectSection": "KLANG PROJESİ",
+  "klangAboutLegalSection": "KATKILAR VE LİSANSLAR",
+  "klangAboutLibraryTitle": "Koleksiyonun düzenli",
+  "klangAboutLibraryDesc": "Cihazında kayıtlı parçaları, albümleri, sanatçıları, çalma listelerini ve klasörleri keşfet.",
+  "klangAboutLyricsTitle": "Müzikle senkronize şarkı sözleri",
+  "klangAboutLyricsDesc": "Gömülü sözleri oku, yerel LRC dosyalarını kullan veya çevrimiçi hizmetler açıkken senkronize sözleri ara.",
+  "klangAboutPlaybackTitle": "Kendi tarzında çalma",
+  "klangAboutPlaybackDesc": "Ekolayzır, sıra kontrolleri ve akıcı geçişlerle sesini şekillendir.",
+  "klangAboutGlassTitle": "Cihaza uyum sağlayan arayüz",
+  "klangAboutGlassDesc": "Liquid Glass gezinmesi, en ağır efektleri her yerde zorlamak yerine görüntüleme kalitesini cihazın gücüne göre ayarlar.",
+  "klangAboutLegalDesc": "Klang'ın kendine ait ürün yönü ve arayüzü vardır. Uygulama kodunun bir bölümü GPL-3.0 lisanslı Looper Player projesinden türetilmiştir. Lisans gereği özgün yazarlar ve telif hakkı bildirimleri korunur.",
+  "klangAboutFooter": "Sakladığın müzik için"
 }

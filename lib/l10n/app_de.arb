@@ -989,5 +989,20 @@
   "noResultsFor": "Keine Ergebnisse für „{query}“",
   "searchTryDifferent": "Prüfe die Schreibweise oder versuche ein anderes Wort.",
   "searchScopeHint": "Titel, Künstler, Alben, Songtexte, Playlists und Genres",
-  "selectedCount": "{count} ausgewählt"
+  "selectedCount": "{count} ausgewählt",
+  "klangAboutTagline": "Deine Sammlung. Dein Sound.",
+  "klangAboutIntro": "Ein lokaler Musikplayer für die Musiksammlung, die dir bereits gehört.",
+  "klangAboutFeaturesSection": "FÜR DEINE MUSIK GEMACHT",
+  "klangAboutProjectSection": "DAS KLANG-PROJEKT",
+  "klangAboutLegalSection": "CREDITS & LIZENZEN",
+  "klangAboutLibraryTitle": "Deine Sammlung, übersichtlich organisiert",
+  "klangAboutLibraryDesc": "Durchsuche Titel, Alben, Künstler, Wiedergabelisten und Ordner auf deinem Gerät.",
+  "klangAboutLyricsTitle": "Texte im Takt",
+  "klangAboutLyricsDesc": "Lies eingebettete Songtexte, nutze lokale LRC-Dateien oder suche synchronisierte Texte, wenn Online-Dienste aktiviert sind.",
+  "klangAboutPlaybackTitle": "Wiedergabe nach deinem Geschmack",
+  "klangAboutPlaybackDesc": "Gestalte deinen Klang mit Equalizer, Warteschlange und sanften Übergängen.",
+  "klangAboutGlassTitle": "Eine Oberfläche, die sich anpasst",
+  "klangAboutGlassDesc": "Die Liquid-Glass-Navigation passt die Darstellungsqualität an dein Gerät an, statt überall die aufwendigsten Effekte zu erzwingen.",
+  "klangAboutLegalDesc": "Klang hat eine eigene Produktvision und Oberfläche. Teile des Anwendungscodes stammen aus dem GPL-3.0-Projekt Looper Player. Die ursprünglichen Autoren und Copyright-Hinweise bleiben gemäß der Lizenz erhalten.",
+  "klangAboutFooter": "FÜR DIE MUSIK, DIE DU BEHÄLTST"
 }

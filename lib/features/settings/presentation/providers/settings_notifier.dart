@@ -92,6 +92,16 @@ class Settings extends _$Settings {
         }
         needsSave = true;
       }
+      // Repair legacy avatar filenames on every load, including installs that
+      // already completed the first Klang branding migration.
+      if (settings.selectedAvatarAsset == 'logo_full.svg' ||
+          settings.selectedAvatarAsset == 'looper_main.svg' ||
+          settings.selectedAvatarAsset == 'looper_player_logo.svg' ||
+          settings.selectedAvatarAsset == 'looper_player_logo_NB.svg' ||
+          settings.selectedAvatarAsset == 'logo.png') {
+        settings.selectedAvatarAsset = 'klang_mark.svg';
+        needsSave = true;
+      }
       // Recover folder settings from an existing library after older scans
       // cleared or failed to persist the folder list.
       if (settings.libraryFolders.isEmpty) {

@@ -989,5 +989,20 @@
   "noResultsFor": "“{query}” के लिए कोई परिणाम नहीं",
   "searchTryDifferent": "वर्तनी जाँचें या कोई दूसरा शब्द आज़माएँ।",
   "searchScopeHint": "शीर्षक, कलाकार, एल्बम, बोल, प्लेलिस्ट और शैलियाँ",
-  "selectedCount": "{count} चुने गए"
+  "selectedCount": "{count} चुने गए",
+  "klangAboutTagline": "आपकी लाइब्रेरी। आपकी धुन।",
+  "klangAboutIntro": "आपके डिवाइस पर मौजूद संगीत संग्रह के लिए बनाया गया लोकल म्यूज़िक प्लेयर।",
+  "klangAboutFeaturesSection": "आपके संगीत के लिए बनाया गया",
+  "klangAboutProjectSection": "KLANG प्रोजेक्ट",
+  "klangAboutLegalSection": "श्रेय और लाइसेंस",
+  "klangAboutLibraryTitle": "आपका संग्रह, व्यवस्थित",
+  "klangAboutLibraryDesc": "अपने डिवाइस में सेव किए गए गाने, एल्बम, कलाकार, प्लेलिस्ट और फ़ोल्डर ब्राउज़ करें।",
+  "klangAboutLyricsTitle": "संगीत के साथ चलने वाले बोल",
+  "klangAboutLyricsDesc": "एम्बेड किए गए बोल पढ़ें, स्थानीय LRC फ़ाइलें इस्तेमाल करें या ऑनलाइन सेवाएँ चालू होने पर सिंक किए गए बोल खोजें।",
+  "klangAboutPlaybackTitle": "अपनी पसंद के अनुसार प्लेबैक",
+  "klangAboutPlaybackDesc": "इक्वलाइज़र, क्यू नियंत्रण और सहज ट्रांज़िशन से अपनी ध्वनि को आकार दें।",
+  "klangAboutGlassTitle": "आपके डिवाइस के अनुसार ढलने वाला इंटरफ़ेस",
+  "klangAboutGlassDesc": "Liquid Glass नेविगेशन डिवाइस की क्षमता के अनुसार रेंडरिंग गुणवत्ता बदलता है, हर जगह भारी प्रभाव लागू नहीं करता।",
+  "klangAboutLegalDesc": "Klang की अपनी उत्पाद दिशा और इंटरफ़ेस है। ऐप का कुछ कोड GPL-3.0 लाइसेंस वाले Looper Player प्रोजेक्ट से लिया गया है। लाइसेंस के अनुसार मूल लेखकों और कॉपीराइट सूचनाओं का श्रेय बरकरार है।",
+  "klangAboutFooter": "उस संगीत के लिए, जिसे आप सहेजते हैं"
 }
