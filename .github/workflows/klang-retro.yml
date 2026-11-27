@@ -138,9 +138,9 @@ jobs:
           set -euo pipefail
           out="build/app/outputs/flutter-apk"
           universal="$out/app-github-release.apk"
-          arm32="$out/app-github-armeabi-v7a-release.apk"
-          arm64="$out/app-github-arm64-v8a-release.apk"
-          x64="$out/app-github-x86_64-release.apk"
+          arm32="$out/app-armeabi-v7a-github-release.apk"
+          arm64="$out/app-arm64-v8a-github-release.apk"
+          x64="$out/app-x86_64-github-release.apk"
 
           for apk in "$universal" "$arm32" "$arm64" "$x64"; do
             test -f "$apk"
@@ -180,7 +180,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Klang-Android-release-APKs
-          path: build/app/outputs/flutter-apk/app-github*-release.apk
+          path: build/app/outputs/flutter-apk/app*-github-release.apk
           if-no-files-found: error
           retention-days: 14
 
