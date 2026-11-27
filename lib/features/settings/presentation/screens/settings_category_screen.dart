@@ -360,10 +360,35 @@ class SettingsCategoryScreen extends ConsumerWidget {
                           ),
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                AppAssets.logo,
-                                height: 36,
-                                fit: BoxFit.contain,
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 42,
+                                    height: 42,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0x338EDCFF),
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: const Color(0x668EDCFF),
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.graphic_eq_rounded,
+                                      color: Color(0xFF8EDCFF),
+                                      size: 25,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Klang',
+                                    style: AppFonts.jostStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                               const Spacer(),
                               Container(

@@ -11,14 +11,14 @@ class AppLinks {
   /// Everyone who has committed to the repo; the About screen's maintainers
   /// row is built from it, so new contributors show up without a release.
   static const String githubContributorsApi =
-      'https://api.github.com/repos/SthrNilshaaa/looper/contributors';
+      'https://api.github.com/repos/Im-new-code/Klang/contributors';
   static const String githubReleasesWeb =
       'https://github.com/Im-new-code/Klang/releases';
   static const String playStoreWeb =
       'https://github.com/Im-new-code/Klang/releases';
 
   // Support & Donation
-  static const String koFi = 'https://ko-fi.com/L2L124TL7L';
+  static const String koFi = 'https://github.com/Im-new-code/Klang';
 
   // Maintainers & Developer Profiles
   static const String nileshGithub = 'https://github.com/SthrNilshaaa';

@@ -54,10 +54,10 @@ extension _SettingsSupportUsDialog on _SettingsViewState {
                   height: 52,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: const Color(0xFFFFDD00),
+                    color: const Color(0xFF8EDCFF),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFFDD00).withValues(alpha: 0.25),
+                        color: const Color(0xFF8EDCFF).withValues(alpha: 0.22),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -70,7 +70,7 @@ extension _SettingsSupportUsDialog on _SettingsViewState {
                         AppHaptics.medium();
                         try {
                           await launchUrl(
-                            Uri.parse(AppLinks.koFi),
+                            Uri.parse(AppLinks.githubRepo),
                             mode: LaunchMode.externalApplication,
                           );
                         } catch (_) {}
@@ -81,13 +81,13 @@ extension _SettingsSupportUsDialog on _SettingsViewState {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(
-                              LucideIcons.coffee,
+                              Icons.star_rounded,
                               size: 20,
                               color: Colors.black,
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              l10n.supportOnKofi,
+                              l10n.giveStarOnGithub,
                               style: AppFonts.jostStyle(
                                 color: Colors.black,
                                 fontSize: 15,

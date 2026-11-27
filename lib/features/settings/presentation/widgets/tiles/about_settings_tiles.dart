@@ -32,7 +32,7 @@ class LooperVersionTile extends ConsumerWidget {
     return ListTile(
       leading: const Icon(LucideIcons.info, color: Colors.white70),
       title: Text(
-        'Looper Player',
+        'Klang',
         style: AppFonts.jostStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
@@ -120,7 +120,7 @@ class OpenSourceLicensesTile extends ConsumerWidget {
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
             builder: (context) => LicensePage(
-              applicationName: 'Looper Player',
+              applicationName: 'Klang',
               applicationVersion: versionAsync.value,
             ),
           ),

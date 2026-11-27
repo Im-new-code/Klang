@@ -246,7 +246,7 @@ class MyApp extends ConsumerWidget {
     final ColorScheme colorScheme = (themeState != null)
         ? themeState.colorScheme
         : ColorScheme.fromSeed(
-            seedColor: Colors.deepPurple,
+            seedColor: const Color(0xFF8EDCFF),
             brightness: Brightness.dark,
           );
 
@@ -256,8 +256,8 @@ class MyApp extends ConsumerWidget {
     final String language = settings?.language ?? '';
 
     final String fontFamily = useNewFont
-        ? (customFontFamily.isEmpty ? 'Pixelify Sans' : customFontFamily)
-        : 'Pixelify Sans';
+        ? (customFontFamily.isEmpty ? 'Jost' : customFontFamily)
+        : 'Jost';
 
     final fontFallback = AppFonts.scriptFallbackFor(fontFamily);
     final textTheme = AppFonts.adjustTextTheme(
@@ -279,64 +279,65 @@ class MyApp extends ConsumerWidget {
         color: Colors.transparent,
         theme: ThemeData(
           useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xFF0A101B),
           colorScheme: colorScheme.copyWith(
-            surface: const Color(0xFF171923),
-            surfaceContainerLowest: const Color(0xFF11131A),
-            surfaceContainerLow: const Color(0xFF191B24),
-            surfaceContainer: const Color(0xFF20232D),
-            surfaceContainerHigh: const Color(0xFF292C38),
-            surfaceContainerHighest: const Color(0xFF323543),
-            onSurface: const Color(0xFFFFE4B5),
-            onSurfaceVariant: const Color(0xFFD1BFA8),
-            secondary: const Color(0xFF72B9D0),
-            outline: const Color(0xFF825A43),
-            outlineVariant: const Color(0xFF44363A),
+            surface: const Color(0xFF0A101B),
+            surfaceContainerLowest: const Color(0xFF070C14),
+            surfaceContainerLow: const Color(0xFF101A27),
+            surfaceContainer: const Color(0xFF152030),
+            surfaceContainerHigh: const Color(0xFF1A2738),
+            surfaceContainerHighest: const Color(0xFF243449),
+            onSurface: const Color(0xFFF4F7FF),
+            onSurfaceVariant: const Color(0xFFB8C6DA),
+            secondary: const Color(0xFF8EDCFF),
+            outline: const Color(0x44FFFFFF),
+            outlineVariant: const Color(0x22FFFFFF),
           ),
           cardTheme: CardThemeData(
-            color: const Color(0xFF20232D),
+            color: const Color(0xFF152030),
             elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-              side: const BorderSide(color: Color(0xFF54372F)),
+              borderRadius: BorderRadius.circular(18),
+              side: const BorderSide(color: Color(0x35FFFFFF)),
             ),
           ),
           dialogTheme: DialogThemeData(
-            backgroundColor: const Color(0xFF20232D),
+            backgroundColor: const Color(0xFF152030),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: const BorderSide(color: Color(0xFF54372F)),
+              borderRadius: BorderRadius.circular(22),
+              side: const BorderSide(color: Color(0x35FFFFFF)),
             ),
           ),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
-            fillColor: const Color(0xFF191B24),
+            fillColor: const Color(0xFF101A27),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: const BorderSide(color: Color(0xFF54372F)),
+              borderRadius: BorderRadius.circular(18),
+              borderSide: const BorderSide(color: Color(0x35FFFFFF)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: const BorderSide(color: Color(0xFF54372F)),
+              borderRadius: BorderRadius.circular(18),
+              borderSide: const BorderSide(color: Color(0x35FFFFFF)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
             ),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
             ),
           ),
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              side: const BorderSide(color: Color(0xFF825A43)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              side: const BorderSide(color: Color(0x44FFFFFF)),
             ),
           ),
           bottomSheetTheme: const BottomSheetThemeData(
-            backgroundColor: Color(0xFF20232D),
+            backgroundColor: Color(0xFF152030),
             surfaceTintColor: Colors.transparent,
           ),
           fontFamily: fontFamily,
@@ -358,12 +359,12 @@ class MyApp extends ConsumerWidget {
             behavior: SnackBarBehavior.floating,
             elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-              side: const BorderSide(color: Color(0xFF54372F)),
+              borderRadius: BorderRadius.circular(18),
+              side: const BorderSide(color: Color(0x35FFFFFF)),
             ),
           ),
         ),
-        themeAnimationDuration: const Duration(milliseconds: 1000),
+        themeAnimationDuration: const Duration(milliseconds: 650),
         themeAnimationCurve: Curves.easeInOut,
         locale: language.isEmpty || language == 'system'
             ? null

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:looper_player/core/services/storage/local_json_store.dart';
-import 'package:looper_player/core/theme/app_assets.dart';
 import 'package:looper_player/core/utils/app_links.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -48,14 +47,8 @@ class GithubContributor {
 /// Shown offline on first run, before there's anything cached.
 const _bundled = [
   GithubContributor(
-    login: 'SthrNilshaaa',
-    profileUrl: AppLinks.nileshGithub,
-    avatarAsset: AppAssets.maintainerAvatar,
-  ),
-  GithubContributor(
-    login: 'sthrkaran',
-    profileUrl: AppLinks.karanGithub,
-    avatarAsset: AppAssets.designerAvatar,
+    login: 'Im-new-code',
+    profileUrl: 'https://github.com/Im-new-code',
   ),
 ];
 

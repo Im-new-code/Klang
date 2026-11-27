@@ -50,6 +50,32 @@ class Settings extends _$Settings {
     final settings = await DbService.isar.appSettings.get(0);
     if (settings != null) {
       bool needsSave = false;
+      // One-time migration from inherited Looper/Klang Retro defaults.
+      // Preserve distinct user choices while enabling the new Klang identity.
+      if (!settings.klangBrandDefaultsMigrated) {
+        if (!settings.enableDynamicTheming) {
+          settings.enableDynamicTheming = true;
+        }
+        if (settings.disableBlur) settings.disableBlur = false;
+        if (!settings.downloadArtwork) settings.downloadArtwork = true;
+        if (settings.accentColor == 0xFF41C25E) {
+          settings.accentColor = 0xFF8EDCFF;
+        }
+        if (settings.customFontFamily == 'Pixelify Sans' ||
+            settings.customFontFamily.isEmpty) {
+          settings.customFontFamily = 'Jost';
+        }
+        if (settings.customFontFamilyLyrics == 'Pixelify Sans' ||
+            settings.customFontFamilyLyrics.isEmpty) {
+          settings.customFontFamilyLyrics = 'Jost';
+        }
+        if (settings.selectedAvatarAsset == 'logo_full.svg' ||
+            settings.selectedAvatarAsset == 'looper_main.svg') {
+          settings.selectedAvatarAsset = 'klang_mark.svg';
+        }
+        settings.klangBrandDefaultsMigrated = true;
+        needsSave = true;
+      }
       // Recover folder settings from an existing library after older scans
       // cleared or failed to persist the folder list.
       if (settings.libraryFolders.isEmpty) {
@@ -199,7 +225,7 @@ class Settings extends _$Settings {
         ..lyricsProviderWordSyncMigrated = true
         ..lyricsOffsetEarlierMigrated = true
         ..stackSansDefaultMigrated = true
-        ..enableDynamicTheming = !Platform.isAndroid
+        ..enableDynamicTheming = true
         ..bgBrightness = 0.5
         ..bgOpacity = 0.3
         ..showHomeArtists = true
@@ -229,6 +255,8 @@ class Settings extends _$Settings {
         ..settingsV3 = true
         ..dynamicLyrics = false
         ..blurredArtworkForLyrics = true
+        ..downloadArtwork = true
+        ..disableBlur = false
         ..showPerformanceOptimizer = false
         ..equalizerEnabled = false
         ..enableAudioCache = true

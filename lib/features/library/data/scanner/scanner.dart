@@ -394,6 +394,7 @@ class LibraryScanner {
         song.totalListenedMs = existingDbSong.totalListenedMs;
         song.lastPositionMs = existingDbSong.lastPositionMs;
         song.isFavorite = existingDbSong.isFavorite;
+        song.artPath ??= existingDbSong.artPath;
         song.hasCustomEqualizer = existingDbSong.hasCustomEqualizer;
         song.equalizerGains = existingDbSong.equalizerGains;
         song.lyricsOffsetMs = existingDbSong.lyricsOffsetMs;

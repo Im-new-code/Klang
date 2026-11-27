@@ -152,12 +152,12 @@ class AppSettings {
   bool shuffle = false;
   int repeatMode = 0; // 0: off, 1: one, 2: all
   String language = 'en';
-  bool enableDynamicTheming = false;
+  bool enableDynamicTheming = true;
   bool darkTheme = true;
   bool saveDynamicColor = true;
   bool dynamicLyrics = false;
   bool blurredArtworkForLyrics = true;
-  int accentColor = 0xFF41C25E; // Default Green
+  int accentColor = 0xFF8EDCFF; // Klang ice blue
   bool audioFocus = true;
   // Unused: audio focus is owned by mpv_audio_kit, which can't honour
   // these (nor pauseOnDuck / permanentAudioFocusChange below). Kept only
@@ -194,14 +194,14 @@ class AppSettings {
   // How long the effect waits after the audio is analysed, to line up
   // with what's actually heard (output buffers, Bluetooth).
   int? artworkVisualizerSyncMs;
-  bool disableBlur = true;
+  bool disableBlur = false;
   // Forces the blur behind bottom sheets on regardless of Dynamic Theming --
   // that toggle changes accent colors/gradients app-wide too, so this gives
   // sheets their blur without needing all of that. Independent of disableBlur,
   // which only gates the Dynamic Theming blur path (see app_bottom_sheet.dart).
   bool alwaysBlurSheets = true;
   bool enableInternet = true;
-  bool downloadArtwork = false;
+  bool downloadArtwork = true;
   bool includeSystemAndMessagingAudio = false;
   bool keepBackgroundGradient = false;
   bool showQualityBadge = true;
@@ -235,6 +235,7 @@ class AppSettings {
   bool animateBackgroundGradient = false;
   bool settingsV2 = false;
   bool settingsV3 = false;
+  bool klangBrandDefaultsMigrated = false;
   bool showPerformanceOptimizer = false;
   String? customBackgroundImagePath;
   double bgBrightness = 0.5;
@@ -305,17 +306,17 @@ class AppSettings {
   // Home screen app-bar avatar. Filename only (not a full path) - it's
   // always resolved against AppAssets.avatarDir, so renaming that
   // folder is a one-place change instead of a data migration.
-  String selectedAvatarAsset = 'logo_full.svg';
+  String selectedAvatarAsset = 'klang_mark.svg';
   // Only the default avatar (looper_main.svg) contains the swappable
   // "#C0E200" accent color - see SelectedAvatar's doc comment.
   bool avatarDynamicColor = false;
 
   bool useNewFont = true;
-  String customFontFamily = 'Pixelify Sans';
+  String customFontFamily = 'Jost';
   int customFontWeight = 400;
   int customFontWeightDelta = 0;
   bool useNewFontLyrics = true;
-  String customFontFamilyLyrics = 'Pixelify Sans';
+  String customFontFamilyLyrics = 'Jost';
   String customFontWeightLyrics = 'Normal';
   int customFontWeightLyricsDelta = 0;
   int activeLyricsFontWeightDelta = 0;

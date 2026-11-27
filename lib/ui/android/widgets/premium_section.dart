@@ -55,7 +55,7 @@ class PremiumSection extends ConsumerWidget {
     this.showRightBorder = true,
     this.showBorder = true,
     this.showShadow = false,
-    this.blurAmount = 3,
+    this.blurAmount = 6,
     this.useBlur = false,
     this.forceNoBlur = false,
     this.forceBlur = false,
@@ -87,7 +87,7 @@ class PremiumSection extends ConsumerWidget {
         (useBlur || forceBlur) && !disableBlur && !isTransitioning;
 
     final borderSide = BorderSide(
-      color: Colors.white.withValues(alpha: 0.05),
+      color: Colors.white.withValues(alpha: 0.12),
       width: showBorder ? 0.8 : 0,
     );
 
@@ -97,7 +97,7 @@ class PremiumSection extends ConsumerWidget {
             color:
                 backgroundColor ??
                 (isBlurActive
-                    ? Colors.white.withValues(alpha: 0.05)
+                    ? Colors.white.withValues(alpha: 0.075)
                     : ((useBlur || forceBlur)
                           ? (isTransitioning
                                 ? Colors.black.withValues(alpha: 0.12)
