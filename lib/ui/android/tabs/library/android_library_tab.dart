@@ -192,7 +192,7 @@ class AndroidLibraryTab extends ConsumerWidget {
                               context: context,
                               ref: ref,
                               icon: LucideIcons.star,
-                              title: 'Favorites',
+                              title: l10n.favorites,
                               onTap: () {
                                 AppHaptics.light();
                                 ref
@@ -205,7 +205,7 @@ class AndroidLibraryTab extends ConsumerWidget {
                               context: context,
                               ref: ref,
                               icon: LucideIcons.disc,
-                              title: 'Albums',
+                              title: l10n.albums,
                               onTap: () {
                                 AppHaptics.light();
                                 ref
@@ -218,7 +218,7 @@ class AndroidLibraryTab extends ConsumerWidget {
                               context: context,
                               ref: ref,
                               icon: LucideIcons.users,
-                              title: 'Artists',
+                              title: l10n.artists,
                               onTap: () {
                                 AppHaptics.light();
                                 ref
@@ -231,7 +231,7 @@ class AndroidLibraryTab extends ConsumerWidget {
                               context: context,
                               ref: ref,
                               icon: LucideIcons.listMusic,
-                              title: 'Playlists',
+                              title: l10n.playlists,
                               onTap: () {
                                 AppHaptics.light();
                                 ref

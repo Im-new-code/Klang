@@ -239,42 +239,66 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
       SliverToBoxAdapter(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Stack(
-            alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Centered independently of the Stack below so it stays put
-              // regardless of how wide the avatar or the icon buttons are.
-              const Center(child: EnrichmentIndicator()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Square avatars sit centered in a 40dp slot as before; a
-                  // wide logo keeps the 38dp height and grows to the right
-                  // (capped so it stays clear of the centered indicator).
-                  SizedBox(
-                    height: 38,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: 40),
-                      child: const Center(
-                        child: SelectedAvatar(size: 38, maxWidth: 130),
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: const Color(0x228EDCFF),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0x448EDCFF),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(13),
+                          child: const SelectedAvatar(size: 30, maxWidth: 30),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Klang',
+                            style: AppFonts.jostStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
+                            ),
+                          ),
+                          Text(
+                            l10n.klangAboutTagline,
+                            style: AppFonts.jostStyle(
+                              color: const Color(0xFF8EDCFF),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
                       PremiumSection(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(32),
-                          bottomLeft: Radius.circular(32),
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                        width: 48,
-                        height: 48,
+                        borderRadius: BorderRadius.circular(17),
+                        width: 46,
+                        height: 46,
                         useExpanded: false,
                         useBlur: useBlur,
                         forceNoBlur: true,
-                        backgroundColor: Colors.white.withValues(alpha: 0.04),
+                        backgroundColor: Colors.white.withValues(alpha: 0.055),
                         onTap: () {
                           AppHaptics.light();
                           ref
@@ -287,20 +311,15 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
                           size: 20,
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 7),
                       PremiumSection(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          topRight: Radius.circular(32),
-                          bottomRight: Radius.circular(32),
-                        ),
-                        width: 48,
-                        height: 48,
+                        borderRadius: BorderRadius.circular(17),
+                        width: 46,
+                        height: 46,
                         useExpanded: false,
                         useBlur: useBlur,
-                        backgroundColor: Colors.white.withValues(alpha: 0.04),
                         forceNoBlur: true,
+                        backgroundColor: Colors.white.withValues(alpha: 0.055),
                         onTap: () {
                           AppHaptics.light();
                           ref
@@ -317,6 +336,8 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              const Center(child: EnrichmentIndicator()),
             ],
           ),
         ),
@@ -482,7 +503,7 @@ class _AndroidHomeTabState extends ConsumerState<AndroidHomeTab> {
                                     _showSongOptions(context, song);
                                   },
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(18),
                                     child: Stack(
                                       children: [
                                         Positioned.fill(
