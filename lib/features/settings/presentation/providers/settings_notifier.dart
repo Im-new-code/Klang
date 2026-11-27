@@ -48,6 +48,7 @@ class Settings extends _$Settings {
 
   Future<void> _loadSettings() async {
     final settings = await DbService.isar.appSettings.get(0);
+    bool retryEmbeddedArtwork = false;
     if (settings != null) {
       bool needsSave = false;
       // One-time migration from inherited Looper/Klang Retro defaults.
@@ -74,6 +75,21 @@ class Settings extends _$Settings {
           settings.selectedAvatarAsset = 'klang_mark.svg';
         }
         settings.klangBrandDefaultsMigrated = true;
+        // Re-enrich old tracks without artwork, including embedded pictures.
+        // LibraryNotifier resumes this after settings initialise.
+        final missingArtworkSongs = await DbService.isar.songs
+            .filter()
+            .artPathIsNull()
+            .findAll();
+        if (missingArtworkSongs.isNotEmpty) {
+          for (final song in missingArtworkSongs) {
+            song.needsEnrichment = true;
+          }
+          await DbService.isar.writeTxn(() async {
+            await DbService.isar.songs.putAll(missingArtworkSongs);
+          });
+          retryEmbeddedArtwork = true;
+        }
         needsSave = true;
       }
       // Recover folder settings from an existing library after older scans
@@ -273,7 +289,9 @@ class Settings extends _$Settings {
 
     _updateActiveFont();
 
-    if (state.downloadArtwork && state.enableInternet) {
+    if (state.downloadArtwork &&
+        state.enableInternet &&
+        !retryEmbeddedArtwork) {
       ArtworkDownloaderService().downloadAllMissingArtworks();
     }
   }
