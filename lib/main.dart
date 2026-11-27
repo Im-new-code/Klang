@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:flutter/gestures.dart' show GestureBinding;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,6 +60,17 @@ void main(List<String> args) async {
     GestureBinding.instance.resamplingEnabled = true;
   }
   AppHaptics.init();
+  // Warm the glass shaders while database and native audio services initialise.
+  // Adaptive quality selects a safe renderer for older Android GPUs.
+  final Future<void> liquidGlassInit = timed('liquidGlass', () async {
+    try {
+      await LiquidGlassWidgets.initialize(
+        warmUpMode: GlassWarmUpMode.auto,
+      );
+    } catch (error, stack) {
+      debugPrint('Klang glass initialisation fallback: $error\\n$stack');
+    }
+  });
 
   // Capture unhandled Flutter framework errors
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -184,18 +196,28 @@ void main(List<String> args) async {
     timed('window', desktopInit),
     timed('db', dbInit),
     timed('plugins', nativePluginsInit),
+    liquidGlassInit,
     timed('permissions', permissionCheck),
     if (AppAmbitReporter.mustStartBeforeUi) reporterInit,
   ]);
   final beforeRunApp = startup.elapsedMilliseconds;
 
   runApp(
-    ProviderScope(
-      overrides: [
-        startupFileProvider.overrideWithValue(initialFile),
-        startupPermissionsGrantedProvider.overrideWithValue(permissionsGranted),
-      ],
-      child: const MyApp(),
+    LiquidGlassWidgets.wrap(
+      child: ProviderScope(
+        overrides: [
+          startupFileProvider.overrideWithValue(initialFile),
+          startupPermissionsGrantedProvider.overrideWithValue(permissionsGranted),
+        ],
+        child: const MyApp(),
+      ),
+      theme: const GlassThemeData.ios27(),
+      adaptiveQuality: true,
+      adaptiveConfig: const GlassAdaptiveScopeConfig(
+        initialQuality: GlassQuality.standard,
+        allowStepUp: true,
+      ),
+      brightnessResolver: Theme.maybeBrightnessOf,
     ),
   );
 

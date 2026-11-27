@@ -474,7 +474,7 @@ class _AndroidMainScreenState extends ConsumerState<AndroidMainScreen>
     // off-screen slide distance both still match its real height exactly.
     final bool isShortWindow = Responsive.isShort(MediaQuery.sizeOf(context));
     final double navbarHeight =
-        (isShortWindow ? 56.0 + 10.0 : 72.0 + 18.0) +
+        (isShortWindow ? 56.0 + 10.0 : 64.0 + 26.0) +
         MediaQuery.of(context).padding.bottom;
 
     final baseTheme = Theme.of(context);

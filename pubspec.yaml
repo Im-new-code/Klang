@@ -20,6 +20,7 @@ dependencies:
   animations: ^3.0.0
   window_manager: ^0.5.2
   google_fonts: ^8.2.1
+  liquid_glass_widgets: ^1.22.0
   squiggly_slider: ^2.0.0
   adaptive_palette: ^3.1.0
   material_color_utilities: any

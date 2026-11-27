@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:looper_player/core/theme/app_fonts.dart';
-import 'package:looper_player/core/utils/ui_utils.dart';
-import 'package:looper_player/core/theme/app_icons.dart';
+import 'package:looper_player/core/services/haptics/app_haptics.dart';
 import 'package:looper_player/features/settings/presentation/providers/settings_notifier.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:looper_player/l10n/app_localizations.dart';
 import 'package:looper_player/core/utils/responsive.dart';
-import '../widgets/premium_section.dart';
-import 'package:looper_player/core/services/haptics/app_haptics.dart';
 
 class PremiumNavbar extends ConsumerWidget {
   final int currentIndex;
-  final Function(int) onTap;
-
-  static final GlobalKey _homeKey = GlobalKey(debugLabel: 'nav_home');
-  static final GlobalKey _songsKey = GlobalKey(debugLabel: 'nav_songs');
-  static final GlobalKey _libraryKey = GlobalKey(debugLabel: 'nav_library');
+  final ValueChanged<int> onTap;
 
   const PremiumNavbar({
     super.key,
@@ -26,265 +19,59 @@ class PremiumNavbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(settingsProvider);
-    final accentColor = Color(settings.accentColor);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final useBlur = true;
-    final l10n = AppLocalizations.of(context)!;
-
-    // Landscape phones are short - the portrait-tuned 72dp bar plus its
-    // padding (90dp total, see navbarHeight in android_main_screen.dart) ate
-    // a disproportionate slice of the little vertical room available there.
-    // Shrink the bar itself and its icon/label on a short window; untouched
-    // in portrait.
-    final bool isCompact = Responsive.isShort(MediaQuery.sizeOf(context));
-    final double navHeight = isCompact ? 56.0 : 72.0;
-    final double navIconSize =
-        (isCompact ? AppIcons.navbarIcon * 0.78 : AppIcons.navbarIcon).s;
-    final double navFontSize = (isCompact ? 14.0 : 17.0).ts;
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        16,
-        2,
-        16,
-        (isCompact ? 8 : 16) + bottomPadding,
-      ),
-      child: SizedBox(
-        height: navHeight,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final double gapSize = 6.s;
-
-            final home = _NavItem(
-              key: _homeKey,
-              iconPath: AppIcons.home,
-              label: l10n.home,
-              isSelected: currentIndex == 0,
-              accentColor: accentColor,
-              iconSize: navIconSize,
-              fontSize: navFontSize,
-            );
-
-            final songs = _NavItem(
-              key: _songsKey,
-              iconPath: AppIcons.songs,
-              label: l10n.songs,
-              isSelected: currentIndex == 1,
-              accentColor: accentColor,
-              iconSize: navIconSize,
-              fontSize: navFontSize,
-            );
-
-            final library = _NavItem(
-              key: _libraryKey,
-              iconPath: AppIcons.library,
-              label: l10n.library,
-              isSelected: currentIndex == 2,
-              accentColor: accentColor,
-              iconSize: navIconSize,
-              fontSize: navFontSize,
-            );
-
-            const leftEnd = BorderRadius.only(
-              topLeft: Radius.circular(36),
-              bottomLeft: Radius.circular(36),
-              topRight: Radius.circular(12),
-              bottomRight: Radius.circular(12),
-            );
-            const rightEnd = BorderRadius.only(
-              topLeft: Radius.circular(12),
-              bottomLeft: Radius.circular(12),
-              topRight: Radius.circular(36),
-              bottomRight: Radius.circular(36),
-            );
-
-            VoidCallback tap(int index) => () {
-              AppHaptics.tick();
-              onTap(index);
-            };
-
-            Widget gap() => AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeOutCubic,
-              width: gapSize,
-            );
-
-            // One of the two tabs sharing the wide, unselected section.
-            Widget half(int index, Widget item) => Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: tap(index),
-                child: Container(
-                  height: double.infinity,
-                  alignment: Alignment.center,
-                  child: item,
-                ),
-              ),
-            );
-
-            // The selected tab gets a section of its own; the other two
-            // share one, except with Songs selected, where all three stand
-            // alone.
-            List<Widget> children;
-            if (currentIndex == 0) {
-              children = [
-                PremiumSection(
-                  flex: 3,
-                  heroTag: 'nav_morph_1',
-                  isSelected: true,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  onTap: tap(0),
-                  borderRadius: leftEnd,
-                  child: home,
-                ),
-                gap(),
-                PremiumSection(
-                  flex: 6,
-                  heroTag: 'nav_morph_2',
-                  isSelected: false,
-                  showLeftBorder: true,
-                  showShadow: false,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  borderRadius: rightEnd,
-                  child: Row(children: [half(1, songs), half(2, library)]),
-                ),
-              ];
-            } else if (currentIndex == 1) {
-              children = [
-                PremiumSection(
-                  flex: 3,
-                  heroTag: 'nav_morph_1',
-                  isSelected: false,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  onTap: tap(0),
-                  borderRadius: leftEnd,
-                  child: home,
-                ),
-                gap(),
-                PremiumSection(
-                  flex: 3,
-                  heroTag: 'nav_morph_2',
-                  isSelected: true,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  onTap: tap(1),
-                  borderRadius: BorderRadius.circular(12),
-                  child: songs,
-                ),
-                gap(),
-                PremiumSection(
-                  flex: 3,
-                  heroTag: 'nav_morph_3',
-                  isSelected: false,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  onTap: tap(2),
-                  borderRadius: rightEnd,
-                  child: library,
-                ),
-              ];
-            } else {
-              children = [
-                PremiumSection(
-                  flex: 6,
-                  heroTag: 'nav_morph_1',
-                  isSelected: false,
-                  showRightBorder: true,
-                  showShadow: false,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  borderRadius: leftEnd,
-                  child: Row(children: [half(0, home), half(1, songs)]),
-                ),
-                gap(),
-                PremiumSection(
-                  flex: 3,
-                  heroTag: 'nav_morph_2',
-                  isSelected: true,
-                  useBlur: useBlur,
-                  keepSurfaceOnDisableBlur: true,
-                  onTap: tap(2),
-                  borderRadius: rightEnd,
-                  child: library,
-                ),
-              ];
-            }
-
-            return Row(children: children);
-          },
-        ),
-      ),
+    final accentColor = Color(
+      ref.watch(settingsProvider.select((settings) => settings.accentColor)),
     );
-  }
-}
+    final l10n = AppLocalizations.of(context)!;
+    final compact = Responsive.isShort(MediaQuery.sizeOf(context));
 
-class _NavItem extends StatelessWidget {
-  final String iconPath;
-  final String label;
-  final bool isSelected;
-  final Color accentColor;
-  final double iconSize;
-  final double fontSize;
-
-  const _NavItem({
-    super.key,
-    required this.iconPath,
-    required this.label,
-    required this.isSelected,
-    required this.accentColor,
-    required this.iconSize,
-    required this.fontSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final inactiveColor = Colors.white.withOpacity(0.4);
-    final targetColor = isSelected ? accentColor : inactiveColor;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AnimatedScale(
-          scale: isSelected ? 1.05 : 1.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-          child: TweenAnimationBuilder<Color?>(
-            tween: ColorTween(end: targetColor),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            builder: (context, color, child) {
-              return SvgPicture.asset(
-                iconPath,
-                colorFilter: ColorFilter.mode(
-                  color ?? inactiveColor,
-                  BlendMode.srcIn,
-                ),
-                width: iconSize,
-                height: iconSize,
-              );
-            },
-          ),
+    return GlassTabBar.bottom(
+      tabs: [
+        GlassTab(
+          icon: const Icon(Icons.home_outlined),
+          activeIcon: const Icon(Icons.home_rounded),
+          label: l10n.home,
         ),
-        const SizedBox(width: 8),
-        Flexible(
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            style: AppFonts.jostStyle(
-              textStyle: const TextStyle(inherit: false),
-              color: targetColor,
-              fontSize: fontSize,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              letterSpacing: 0.2,
-            ),
-            child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-          ),
+        GlassTab(
+          icon: const Icon(Icons.graphic_eq_rounded),
+          activeIcon: const Icon(Icons.equalizer_rounded),
+          label: l10n.songs,
+        ),
+        GlassTab(
+          icon: const Icon(Icons.library_music_outlined),
+          activeIcon: const Icon(Icons.library_music_rounded),
+          label: l10n.library,
         ),
       ],
+      selectedIndex: currentIndex.clamp(0, 2),
+      onTabSelected: (index) {
+        AppHaptics.tick();
+        onTap(index);
+      },
+      barHeight: compact ? 56 : 64,
+      verticalPadding: compact ? 5 : 13,
+      horizontalPadding: 16,
+      spacing: 6,
+      barBorderRadius: 36,
+      iconSize: compact ? 20 : 22,
+      iconLabelSpacing: 3,
+      labelFontSize: compact ? 10 : 11,
+      selectedIconColor: accentColor,
+      selectedLabelColor: accentColor,
+      unselectedIconColor: Colors.white.withValues(alpha: 0.65),
+      unselectedLabelColor: Colors.white.withValues(alpha: 0.65),
+      selectedLabelStyle: AppFonts.jostStyle(
+        color: accentColor,
+        fontSize: compact ? 10 : 11,
+        fontWeight: FontWeight.w700,
+      ),
+      unselectedLabelStyle: AppFonts.jostStyle(
+        color: Colors.white.withValues(alpha: 0.68),
+        fontSize: compact ? 10 : 11,
+        fontWeight: FontWeight.w500,
+      ),
+      indicatorColor: accentColor.withValues(alpha: 0.18),
+      maskingQuality: MaskingQuality.off,
     );
   }
 }
