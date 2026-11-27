@@ -191,6 +191,9 @@ jobs:
 
       - name: Android 8.0 (API 26) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # Emulator 37+ disables software CPU emulation unless explicitly opted in.
+          ANDROID_I_WANT_MY_TCG: "yes"
         with:
           api-level: 26
           target: google_apis
@@ -231,6 +234,9 @@ jobs:
 
       - name: Android 17 (API 37.2) runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # Emulator 37+ disables software CPU emulation unless explicitly opted in.
+          ANDROID_I_WANT_MY_TCG: "yes"
         with:
           # Google retired the 37.0 image line in November 2026; 37.2 is the
           # current Android 17 platform/system-image revision on hosted runners.
